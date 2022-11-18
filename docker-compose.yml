@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  broker:
+    image: rabbitmq:3
+    ports:
+      - "${DMTL_BROKER_PORT}:5672"
+  tracking:
+    build:
+      dockerfile: mlflow.Dockerfile
+      context: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - "./mlflow_data/database.db:/mlflow/database.db"
+      - "./lightning_data:/mlflow/artifacts"
+
+

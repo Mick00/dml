@@ -1,0 +1,5 @@
+START_SELECTION = "training.selection.start"
+UPDATES_SELECTED = "training.selection.done"
+AGGREGATION_DONE = "training.aggregation.done"
+CLUSTER_SELECTION = f"training.cluster.selection.start"
+CLUSTER_TEST_COMPLETED = f"training.cluster.selection.test"

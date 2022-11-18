@@ -1,0 +1,4 @@
+.datasets
+lightning_data
+mlflow_data
+.env
