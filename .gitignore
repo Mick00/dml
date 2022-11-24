@@ -4,3 +4,4 @@ lightning_data
 mlflow_data
 .env
 .idea
+*/__pycache__/*
