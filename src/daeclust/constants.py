@@ -1,5 +1,5 @@
-START_SELECTION = "training.selection.start"
-UPDATES_SELECTED = "training.selection.done"
-AGGREGATION_DONE = "training.aggregation.done"
-CLUSTER_SELECTION = f"training.cluster.selection.start"
-CLUSTER_TEST_COMPLETED = f"training.cluster.selection.test"
+DAECLUST_MODULE = "daeclust"
+
+AGGREGATION_UPDATE_POOLED = "aggregation.update.pooled"
+AGGREGATION_UPDATE_SELECTION_START = "aggregation.updates.selection.start"
+AGGREGATION_UPDATE_SELECTION_DONE = "aggregation.updates.selection.done"

@@ -1,2 +1,2 @@
-SHARE_UPDATE = "training.update.share"
-UPDATE_QUEUED_EVENT = "training.update.queued"
+TRAINING_UPDATE_SHARE = "training.update.share"
+TRAINING_UPDATE_QUEUED = "training.update.queued"

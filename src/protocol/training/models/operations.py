@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from typing import Any
 
+import torch
 from torch import nn
 
 
@@ -47,3 +48,17 @@ def avg_models(main, models, n=0):
 def clone_into(model, to_clone):
     model.load_state_dict(to_clone.state_dict(), strict=False)
     return model
+
+
+def weight_divergence(model_0, model_1):
+    diff = calc_diff(model_0, model_1)
+    total_divergence = 0
+    for layer in diff:
+        div = torch.cumsum(torch.abs(diff[layer]), dim=0)
+        total_divergence += div.sum()
+    return total_divergence
+
+#def EMD(p, q):
+#    x = p - q
+#    y = torch.cumsum(x, dim=0)
+#    return torch.abs(y).sum()

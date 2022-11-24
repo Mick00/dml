@@ -28,13 +28,13 @@ class TrainingClient:
         self.exp_name = exp_name
         self.fast_dev_run = False
         self.train_dataset = MNIST(
-            '.datasets/mnist',
+            self.dataset_path,
             train=True,
             download=True,
             transform=transforms.ToTensor()
         )
         self.test_dataset = MNIST(
-            '.datasets/mnist',
+            self.dataset_path,
             train=False,
             download=True,
             transform=transforms.ToTensor()

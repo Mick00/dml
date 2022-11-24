@@ -1,7 +1,7 @@
 from threading import Thread
 
-from src.daeclust.daeclust_helpers import get_model_loader
-from src.daeclust.storage.model_loader import ModelLoader
+from src.nsclust.nsclust_helpers import get_model_loader
+from src.nsclust.storage.model_loader import ModelLoader
 from src.fed_avg.constant import GLOBAL_CLUSTER_ID
 from src.fed_avg.events import AggregateModelTestDone
 from src.protocol.config.config_state_helper import get_experience_name

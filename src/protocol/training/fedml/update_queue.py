@@ -1,12 +1,12 @@
 from src.protocol.states.event import Event
 from src.protocol.states.handler import Handler
-from src.protocol.training.fedml.constants import UPDATE_QUEUED_EVENT
+from src.protocol.training.fedml.constants import TRAINING_UPDATE_QUEUED
 from src.protocol.training.fedml.model_update_meta import ModelUpdateMeta
 
 
 class QueuedUpdate(Event):
     def __init__(self, update: ModelUpdateMeta, queue: [ModelUpdateMeta]):
-        super().__init__(UPDATE_QUEUED_EVENT)
+        super().__init__(TRAINING_UPDATE_QUEUED)
         self.update = update
         self.queue = queue
 

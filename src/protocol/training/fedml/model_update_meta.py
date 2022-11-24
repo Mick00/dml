@@ -14,7 +14,7 @@ class ModelUpdateMeta(ModelMeta):
         self.from_id = from_id
 
 
-def load_update(update: ModelUpdateMeta) -> Experiment:
+def load_update(experience_name: str, update: ModelUpdateMeta) -> Experiment:
     module = create_model(update.model_name)
     module.load_from_checkpoint(update.checkpoint_uri)
-    return Experiment(update.cluster_id, update.round_id, update.model_name, module, update.checkpoint_uri)
+    return Experiment(experience_name, update.cluster_id, update.round_id, update.model_name, module, update.checkpoint_uri)

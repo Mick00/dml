@@ -1,5 +1,5 @@
-from src.daeclust.events import SelectedUpdates
-from src.daeclust.start_selection import StartUpdateSelection
+from src.nsclust.events import SelectedUpdates
+from src.nsclust.start_selection import StartUpdateSelection
 from src.protocol.states.handler import Handler
 from src.protocol.states.state import State
 from src.protocol.states.transition import StateTransition

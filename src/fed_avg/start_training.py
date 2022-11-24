@@ -1,6 +1,6 @@
 import secrets
 
-from src.daeclust.daeclust_helpers import CURRENT_CLUSTER_KEY, get_model_loader
+from src.nsclust.nsclust_helpers import CURRENT_CLUSTER_KEY, get_model_loader
 
 from src.fed_avg.constant import GLOBAL_CLUSTER_ID
 from src.protocol.client.client_state_helpers import get_node_id, get_peers

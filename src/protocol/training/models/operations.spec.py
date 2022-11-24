@@ -4,7 +4,7 @@ from unittest.mock import Mock
 import torch
 from torch import nn
 
-from src.protocol.training.models.operations import merge_models, clone_into, calc_diff, apply_diff
+from src.protocol.training.models.operations import merge_models, clone_into, calc_diff, apply_diff, weight_divergence
 
 
 class OperationsTest(unittest.TestCase):
@@ -46,6 +46,19 @@ class OperationsTest(unittest.TestCase):
         model0 = apply_diff(model0, diff)
         self.assertTrue(torch.equal(model0.state_dict()["0.weight"], model1.state_dict()["0.weight"]))
 
+    def test_weight_divergence(self):
+        model_0 = nn.Linear(2, 1)
+        model_0.load_state_dict({
+            "weight": torch.Tensor([[2, 2]]),
+            "bias": torch.Tensor([3]),
+        })
+        model_1 = nn.Linear(2, 1)
+        model_1.load_state_dict({
+            "weight": torch.Tensor([[5, 5]]),
+            "bias": torch.Tensor([2]),
+        })
+        divergence = weight_divergence(model_0, model_1)
+        self.assertEqual(divergence, 7)
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,5 +1,7 @@
 import pytorch_lightning as pl
 
+from src.protocol.training.models.model_factory import create_model
+
 
 class ModelMeta:
     def __init__(self, cluster_id: str, round_id: int, model_name: str, checkpoint_uri: str):
@@ -25,3 +27,10 @@ class Experiment(ModelMeta):
         self.model = model
         self.experiment_id = experiment_id
         self.run_id = run_id
+
+
+def load_model(update: ModelMeta):
+    module = create_model(update.model_name)
+    module.load_from_checkpoint(update.checkpoint_uri)
+    return module
+

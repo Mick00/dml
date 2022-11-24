@@ -1,4 +1,4 @@
-from src.daeclust.start_selection import StartUpdateSelection
+from src.nsclust.start_selection import StartUpdateSelection
 from src.protocol.client.client_state_helpers import get_peers
 from src.protocol.states.handler import Handler
 from src.protocol.states.state import State

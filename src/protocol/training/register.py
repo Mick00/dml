@@ -4,7 +4,7 @@ from src.protocol.client.constants import CLIENT_STARTED
 from src.protocol.states.constants import HANDLER_STARTED
 from src.protocol.states.handler import Handler
 from src.protocol.training.constants import TRAIN_MODEL, MODEL_TRAINED, NEXT_ROUND, INIT_EXPERIMENT
-from src.protocol.training.fedml.constants import SHARE_UPDATE
+from src.protocol.training.fedml.constants import TRAINING_UPDATE_SHARE
 from src.protocol.training.fedml.init_update_queue import InitUpdateQueue
 from src.protocol.training.fedml.share_update import ShareUpdate, ReceiveUpdate
 from src.protocol.training.init_experiment_tracking import InitExperimentTracking, InitExperimentHandler
@@ -24,4 +24,4 @@ def register_training_module(handler: Handler):
     handler.register_reducer(NEXT_ROUND, NextRoundTransition(100))
     handler.register_reducer(TRAIN_MODEL, Train(100))
     handler.register_reducer(MODEL_TRAINED, TrainingCleanUp(100))
-    handler.register_reducer(SHARE_UPDATE, ReceiveUpdate(100))
+
