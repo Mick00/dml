@@ -19,10 +19,6 @@ def get_local_model_name(state: State) -> str:
     return get_config(state).get('local_model')
 
 
-def get_data_path(state: State) -> str:
-    return get_config(state).get('data_path')
-
-
 def get_output_path(state: State) -> str:
     return get_config(state).get('training_out')
 

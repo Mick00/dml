@@ -7,6 +7,7 @@ CLIENT_KEY = "client"
 STARTED_KEY = "started"
 IS_STOPPING_KEY = "is_stopping"
 ROUND_KEY = "round"
+RANK_KEY = "rank"
 
 
 def get_client_state(state: State) -> dict:
@@ -60,3 +61,7 @@ def get_round_id(state: State):
 
 def update_round_id(state: State, new_round_id: int):
     state.update_module(CLIENT_MODULE, {ROUND_KEY: new_round_id})
+
+
+def get_node_rank(state: State) -> int:
+    return state.get_module_state(CLIENT_MODULE).get(RANK_KEY)

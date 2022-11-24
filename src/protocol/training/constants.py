@@ -1,5 +1,6 @@
 TRAINING_MODULE = "training"
 
+DATASET_PREPARE = f"{TRAINING_MODULE}.dataset.load"
 NEXT_ROUND = f"{TRAINING_MODULE}.round.next"
 ROUND_START = f"{TRAINING_MODULE}.round.start"
 TRAIN_MODEL = f"{TRAINING_MODULE}.start"

@@ -2,8 +2,9 @@ import os
 from abc import ABC
 from threading import Thread
 
+from .actions.client_rank import SetClientRank
 from .actions.confirm_registration import ConfirmRegistrationReceiverTransition
-from .actions.constants import REGISTER_MESSAGE, CONFIRM_REGISTRATION_MESSAGE
+from .actions.constants import REGISTER_MESSAGE, CONFIRM_REGISTRATION_MESSAGE, NEW_PEER
 from .actions.register import RegisterSenderTransition, RegisterReceiverTransition
 from .client import Client
 from .client_state_helpers import get_round_id, init_client, set_is_stopping, client_is_started, get_client
@@ -27,6 +28,7 @@ def register_client_module(handler: Handler):
     handler.register_reducer(CLIENT_STARTED, RegisterSenderTransition(200))
     handler.register_reducer(REGISTER_MESSAGE, RegisterReceiverTransition(100))
     handler.register_reducer(CONFIRM_REGISTRATION_MESSAGE, ConfirmRegistrationReceiverTransition(100))
+    handler.register_reducer(NEW_PEER, SetClientRank(75))
 
 
 class StartClient(StateTransition):

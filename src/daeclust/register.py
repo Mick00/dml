@@ -5,6 +5,7 @@ from src.daeclust.state.init_strategy import InitStrategy, InitStrategyForRound
 from src.daeclust.state.trigger_next_round import TriggerNextRound
 from src.daeclust.state.trigger_update_selection import TriggerUpdateSelection
 from src.daeclust.state.select_updates import WDUpdateSelector
+from src.datasets.dataloader import TrainingClientDataLoader
 from src.nsclust.constants import CLUSTER_SELECTION, CLUSTER_TEST_COMPLETED
 from src.nsclust.init_tracking import InitTracking
 from src.daeclust.state.select_cluster import StartClusterSelectionTests, SelectBestCluster
@@ -12,7 +13,7 @@ from src.daeclust.state.start_training import StartTrainingPhase
 from src.protocol.client.constants import CLIENT_STARTED
 from src.protocol.states.constants import HANDLER_STARTED
 from src.protocol.states.handler import Handler
-from src.protocol.training.constants import ROUND_START, MODEL_TRAINED
+from src.protocol.training.constants import ROUND_START, MODEL_TRAINED, DATASET_PREPARE
 from src.protocol.training.fedml.constants import TRAINING_UPDATE_SHARE
 from src.protocol.training.fedml.share_update import ShareUpdate
 
@@ -20,6 +21,7 @@ from src.protocol.training.fedml.share_update import ShareUpdate
 def register_daeclust_module(handler: Handler):
     handler.register_reducer(HANDLER_STARTED, InitTracking(70))
     handler.register_reducer(CLIENT_STARTED, InitStrategy(71))
+    handler.register_reducer(DATASET_PREPARE, TrainingClientDataLoader(100))
     handler.register_reducer(ROUND_START, StartTrainingPhase(100))
     handler.register_reducer(ROUND_START, InitStrategyForRound(90))
     handler.register_reducer(CLUSTER_SELECTION, StartClusterSelectionTests(100))

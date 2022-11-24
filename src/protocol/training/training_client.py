@@ -5,7 +5,7 @@ import pytorch_lightning as pl
 from pytorch_lightning.callbacks import EarlyStopping
 from pytorch_lightning.loggers import MLFlowLogger
 from torchvision import transforms
-from torch.utils.data import random_split, DataLoader
+from torch.utils.data import random_split, DataLoader, Dataset
 from torchvision.datasets import MNIST
 from src.protocol.training.models.experiment import Experiment
 
@@ -15,31 +15,25 @@ class TrainingClient:
     def __init__(self,
                  trainer_id: str,
                  enable_gpu=False,
-                 dataset_path=None,
                  output_dir=None,
                  tracking_uri=None,
                  exp_name="default"
                  ):
         self.trainer_id = trainer_id
-        self.dataset_path = dataset_path
         self.output_dir = output_dir
         self.tracking_uri = tracking_uri
         self.enable_gpu = enable_gpu
         self.exp_name = exp_name
         self.fast_dev_run = False
-        self.train_dataset = MNIST(
-            self.dataset_path,
-            train=True,
-            download=True,
-            transform=transforms.ToTensor()
-        )
-        self.test_dataset = MNIST(
-            self.dataset_path,
-            train=False,
-            download=True,
-            transform=transforms.ToTensor()
-        )
-        self.train_set_size = int(len(self.train_dataset) * 0.9)
+        self.train_dataset = None
+        self.test_dataset = None
+        self.train_set_size = 0
+        self.valid_set_size = 0
+
+    def set_dataset(self, train_dataset: Dataset, test_dataset: Dataset):
+        self.train_dataset = train_dataset
+        self.test_dataset = test_dataset
+        self.train_set_size = int(len(self.train_dataset) * 0.85)
         self.valid_set_size = len(self.train_dataset) - self.train_set_size
 
     def get_logger(self, model: Experiment, test=False):
