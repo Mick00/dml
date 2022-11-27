@@ -5,7 +5,7 @@ import pytorch_lightning as pl
 from pytorch_lightning.callbacks import EarlyStopping
 from pytorch_lightning.loggers import MLFlowLogger
 from torchvision import transforms
-from torch.utils.data import random_split, DataLoader, Dataset
+from torch.utils.data import random_split, DataLoader, Dataset, Sampler
 from torchvision.datasets import MNIST
 from src.protocol.training.models.experiment import Experiment
 
@@ -26,17 +26,19 @@ class TrainingClient:
         self.exp_name = exp_name
         self.fast_dev_run = False
         self.train_dataset = None
+        self.val_dataset = None
         self.test_dataset = None
-        self.train_set_size = 0
-        self.valid_set_size = 0
+        self.sampler_factory = None
 
-    def set_dataset(self, train_dataset: Dataset, test_dataset: Dataset):
+    def set_dataset(self, train_dataset: Dataset, val_dataset: Dataset, test_dataset: Dataset):
         self.train_dataset = train_dataset
+        self.val_dataset = val_dataset
         self.test_dataset = test_dataset
-        self.train_set_size = int(len(self.train_dataset) * 0.85)
-        self.valid_set_size = len(self.train_dataset) - self.train_set_size
 
-    def get_logger(self, model: Experiment, test=False):
+    def set_sampler_factory(self, sampler_fn):
+        self.sampler_factory = sampler_fn
+
+    def get_logger(self, model: Experiment, test=False, additional_tags={}):
         mlf_logger = MLFlowLogger(
             experiment_name=model.exp_name,
             tags={
@@ -44,7 +46,7 @@ class TrainingClient:
                 "round_id": str(model.round_id),
                 "trainer_id": self.trainer_id,
                 "test": str(test)
-            },
+            } | additional_tags,
             tracking_uri=self.tracking_uri,
         )
         return mlf_logger
@@ -75,15 +77,18 @@ class TrainingClient:
         return os.path.join(self.output_dir, "checkpoints")
 
     def train_model(self, exp: Experiment) -> Experiment:
-        mnist_train, mnist_val = random_split(self.train_dataset, [self.train_set_size, self.valid_set_size])
-        train_loader = DataLoader(mnist_train, batch_size=32)
-        val_loader = DataLoader(mnist_val, batch_size=32)
+        train_loader = self.get_dataloader(self.train_dataset)
+        val_loader = self.get_dataloader(self.val_dataset)
         trainer = self.get_trainer(exp)
         trainer.fit(exp.model, train_loader, val_loader)
         exp.experiment_id = exp.model.logger.experiment_id
         exp.run_id = exp.model.logger.run_id
         exp.checkpoint_uri = self.get_checkpoint_path(exp)
         return exp
+
+    def get_dataloader(self, dataset):
+        sampler = self.sampler_factory(dataset) if callable(self.sampler_factory) else None
+        return DataLoader(dataset, batch_size=32, sampler=sampler)
 
     def get_checkpoint_path(self, exp: Experiment):
         checkpoint_folder = os.path.join(self.get_output_dir(), exp.experiment_id, exp.run_id, "checkpoints/")
@@ -106,7 +111,7 @@ class TrainingClient:
         return last_checkpoint
 
     def test_model(self, exp: Experiment):
-        test_loader = DataLoader(self.test_dataset, batch_size=32)
+        test_loader = self.get_dataloader(self.test_dataset)
         trainer = self.get_trainer(exp, test=True)
         trainer.test(exp.model, test_loader)
         exp.experiment_id = exp.model.logger.experiment_id

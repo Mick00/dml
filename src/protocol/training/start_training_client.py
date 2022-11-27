@@ -6,7 +6,6 @@ from src.protocol.states.handler import Handler
 from src.protocol.states.state import State
 from src.protocol.states.transition import StateTransition
 from src.protocol.training.constants import TRAINING_MODULE
-from src.protocol.training.events import PrepareDataset
 from src.protocol.training.training_state_helper import is_training_client_started, TrainingClient, TRAINING_CLIENT_KEY
 
 
@@ -24,4 +23,3 @@ class StartTrainingClient(StateTransition):
                 STARTED_KEY: True,
                 TRAINING_CLIENT_KEY: training_client
             })
-            handler.queue_event(PrepareDataset())

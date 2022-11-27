@@ -3,7 +3,7 @@ import secrets
 from src.nsclust.nsclust_helpers import CURRENT_CLUSTER_KEY, get_model_loader
 
 from src.fed_avg.constant import GLOBAL_CLUSTER_ID
-from src.protocol.client.client_state_helpers import get_node_id, get_peers
+from src.protocol.client.client_state_helpers import get_node_id, get_peers, get_node_rank
 from src.protocol.config.config_state_helper import get_local_model_name, get_experience_name
 from src.protocol.states.handler import Handler
 from src.protocol.states.state import State
@@ -22,10 +22,9 @@ class StartTrainingPhase(StateTransition):
                 CURRENT_CLUSTER_KEY: GLOBAL_CLUSTER_ID
             })
             my_id = get_node_id(state)
-            peers = list(get_peers(state)) + [my_id]
-            peers.sort()
+            rank = get_node_rank(state)
             """Make the peer with the lowest ID create the seed model"""
-            if peers[0] == my_id:
+            if rank == 0:
                 model_name = get_local_model_name(state)
                 model = create_model(model_name)
                 experiment = Experiment(

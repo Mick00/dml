@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 
 from src.daeclust.register import register_daeclust_module
+from src.datasets.register import register_data_module
 from src.nsclust.register import register_nsclust_module
 from src.protocol.cli.cli import register_cli_module
 from src.protocol.cli.constant import CLI_START
@@ -21,6 +22,7 @@ if __name__ == '__main__':
     register_config_module(handler)
     register_handler_module(handler)
     register_cli_module(handler)
+    register_data_module(handler)
     register_client_module(handler)
     register_training_module(handler)
     register_daeclust_module(handler)
