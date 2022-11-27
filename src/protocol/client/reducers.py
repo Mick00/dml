@@ -1,4 +1,5 @@
 import os
+import secrets
 from abc import ABC
 from threading import Thread
 
@@ -7,7 +8,8 @@ from .actions.confirm_registration import ConfirmRegistrationReceiverTransition
 from .actions.constants import REGISTER_MESSAGE, CONFIRM_REGISTRATION_MESSAGE, NEW_PEER
 from .actions.register import RegisterSenderTransition, RegisterReceiverTransition
 from .client import Client
-from .client_state_helpers import get_round_id, init_client, set_is_stopping, client_is_started, get_client
+from .client_state_helpers import get_round_id, init_client, set_is_stopping, client_is_started, get_client, ID_KEY, \
+    get_node_id
 from .constants import CLIENT_MODULE, CLIENT_START, CLIENT_STARTED, CLIENT_SEND, CLIENT_STOPPED
 from .messages.message import wrap_event
 from ..config.config_state_helper import get_broker_host
@@ -19,8 +21,9 @@ from ..states.transition import StateTransition
 
 
 def register_client_module(handler: Handler):
-    start_client = StartClient(100)
+    start_client = StartClient(200)
     handler.register_reducer(CLIENT_START, start_client)
+    handler.register_reducer(HANDLER_STARTED, InitClientModule(10))
     handler.register_reducer(HANDLER_STARTED, start_client)
     handler.register_reducer(HANDLER_STOP, StopClient(90))
     handler.register_reducer(CLIENT_STOPPED, StoppedClient(100))
@@ -31,11 +34,22 @@ def register_client_module(handler: Handler):
     handler.register_reducer(NEW_PEER, SetClientRank(75))
 
 
+class InitClientModule(StateTransition):
+    def transition(self, event: Event, state: State, handler: Handler):
+        if not client_is_started(state):
+            id = secrets.token_hex(16)
+            state.update_module(CLIENT_MODULE, {
+                ID_KEY: id,
+            })
+
+
 class StartClient(StateTransition):
     def transition(self, event: Event, state: State, handler: Handler):
         if not client_is_started(state):
+            id = get_node_id(state)
             host, port = get_broker_host(state)
             client = Client(
+                id,
                 host,
                 port,
                 handler

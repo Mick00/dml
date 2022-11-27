@@ -9,7 +9,7 @@ class NextRoundTransition(StateTransition):
     def transition(self, event: NextRound, state: State, handler: Handler):
         current_round = get_round_id(state)
         if current_round != event.current_round:
-            print("Next round does not correspond with current round", current_round, event.current_round )
+            print("Next round does not correspond with current round. state:", current_round, ", event:", event.current_round )
             return
         new_round = current_round + 1
         update_round_id(state, new_round)

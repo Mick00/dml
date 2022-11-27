@@ -2,6 +2,7 @@ from src.protocol.client.client import Client
 from src.protocol.client.constants import CLIENT_MODULE
 from src.protocol.states.state import State
 
+ID_KEY = "id"
 PEERS_KEY = "peers"
 CLIENT_KEY = "client"
 STARTED_KEY = "started"
@@ -32,7 +33,7 @@ def get_client(state: State) -> Client:
 
 
 def get_node_id(state: State) -> str:
-    return get_client(state).id
+    return get_client_state(state).get(ID_KEY)
 
 
 def client_is_started(state: State) -> bool:

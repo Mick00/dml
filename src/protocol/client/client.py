@@ -11,11 +11,11 @@ from src.protocol.states.handler import Handler
 
 class Client:
 
-    def __init__(self, message_broker: str, port: int, handler: Handler):
+    def __init__(self, id: str, message_broker: str, port: int, handler: Handler):
         self.queue_name = None
         self.listening_connection = None
         self.listening_channel = None
-        self.id = secrets.token_hex(16)
+        self.id = id
         self.serializer = Serializer()
         self.hostname = message_broker
         self.exchange_name = "swarm_learning"

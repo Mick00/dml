@@ -12,8 +12,9 @@ parser = get_arg_parse()
 parser.add_argument('--data_path')
 parser.add_argument('--dataset')
 
+
 def register_data_module(handler: Handler):
-    handler.register_reducer(HANDLER_STARTED, InitDataLoader(50))
+    handler.register_reducer(HANDLER_STARTED, InitDataLoader(80))
     handler.register_reducer(DATASET_PREPARE, DatasetPrepare(100))
     handler.register_reducer(DATA_REGISTER_HOOK, MnistRegister(100))
     handler.register_reducer(DATA_REGISTER_HOOK, EmnistRegister(100))

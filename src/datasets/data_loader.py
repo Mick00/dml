@@ -1,33 +1,49 @@
-from torch.utils.data import random_split
-
 from src.datasets.data_helpers import get_dataset, get_data_module
+from src.datasets.sampling_rules.sampler_builder import SamplerBuilder
+from src.datasets.sampling_rules.val_split import val_split
 from src.protocol.states.state import State
 
 
 class DataLoader:
-    def __init__(self):
+    def __init__(self, train_ratio=0.85):
+        self.train_ratio = train_ratio
         self.loaders_fn = {}
+        self.sampling_rules = None
         self.subset_fn = None
+        self.train_dataset = None
+        self.test_dataset = None
+        self.train_sampler = None
+        self.val_sampler = None
+        self.test_sampler = None
 
     def register_loader(self, key: str, fn):
         self.loaders_fn[key] = fn
 
-    def set_subset(self, fn):
-        self.subset_fn = fn
+    def set_sampling_rules(self, sampling_rules):
+        self.sampling_rules = sampling_rules
 
     def load_data(self, state: State):
         loader_fn = self.loaders_fn.get(get_dataset(state))
-        train_dataset, test_dataset = loader_fn(state)
-        train_dataset, val_dataset = self.split(train_dataset, 0.85)
-        if callable(self.subset_fn):
-            train_dataset, val_dataset, test_dataset = self.subset_fn(state, train_dataset, val_dataset, test_dataset)
-        return train_dataset, val_dataset, test_dataset
+        self.train_dataset, self.test_dataset = loader_fn(state)
+        train_sampler = self.get_sampler(self.train_dataset)
+        self.test_sampler = self.get_sampler(self.test_dataset)
+        self.train_sampler = train_sampler.copy().apply(val_split(True, self.train_ratio))
+        self.val_sampler = train_sampler.copy().apply(val_split(False, self.train_ratio))
 
-    def split(self, dataset, split: float):
-        train_set_size = int(len(dataset) * split)
-        valid_set_size = len(dataset) - train_set_size
-        train_dataset, val_dataset = random_split(dataset, [train_set_size, valid_set_size])
-        return train_dataset, val_dataset
+    def get_sampler(self, dataset):
+        sampler_builder = SamplerBuilder(dataset)
+        for sample_rule in self.sampling_rules:
+            sampler_builder.apply(sample_rule)
+        return sampler_builder
+
+    def get_train_data(self):
+        return self.train_dataset, self.train_sampler.sampler()
+
+    def get_val_data(self):
+        return self.train_dataset, self.val_sampler.sampler()
+
+    def get_test_data(self):
+        return self.test_dataset, self.test_sampler.sampler()
 
 
 DATALOADER_KEY = "data_loader"
