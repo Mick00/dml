@@ -31,7 +31,7 @@ def register_client_module(handler: Handler):
     handler.register_reducer(CLIENT_STARTED, RegisterSenderTransition(200))
     handler.register_reducer(REGISTER_MESSAGE, RegisterReceiverTransition(100))
     handler.register_reducer(CONFIRM_REGISTRATION_MESSAGE, ConfirmRegistrationReceiverTransition(100))
-    handler.register_reducer(NEW_PEER, SetClientRank(75))
+    handler.register_reducer(NEW_PEER, SetClientRank(10))
 
 
 class InitClientModule(StateTransition):

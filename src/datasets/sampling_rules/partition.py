@@ -1,7 +1,7 @@
 import torch
 
 
-def rank_subset(rank: int, n_peers: int):
+def partition_subset(rank: int, n_peers: int):
     def weight_calc(dataset, weights):
         dataset_len = len(dataset.targets)
         selected_weights = torch.zeros(dataset_len)

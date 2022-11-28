@@ -5,7 +5,7 @@ import torch
 
 from src.datasets.sampling_rules.balance import balanced_weight
 from src.datasets.sampling_rules.sampler_builder import SamplerBuilder
-from src.datasets.sampling_rules.rank import rank_subset
+from src.datasets.sampling_rules.partition import partition_subset
 from src.datasets.sampling_rules.target import target_subset
 from src.datasets.sampling_rules.val_split import val_split
 
@@ -44,7 +44,7 @@ class FilterBuilderTest(unittest.TestCase):
     def test_rank(self):
         ds = self.mock_dataset()
         sampler_builder = SamplerBuilder(ds)
-        sampler_builder.apply(rank_subset(0, 2))
+        sampler_builder.apply(partition_subset(0, 2))
         self.assertEqual(sampler_builder.get_num_samples(), len(self.targets) / 2)
 
     def test_target(self):
@@ -53,7 +53,7 @@ class FilterBuilderTest(unittest.TestCase):
         sampler_builder.apply(target_subset(0, 2))
         self.assertEqual(sampler_builder.get_num_samples(), self.counts[0] + self.counts[1])
 
-    def test_val_spli_train(self):
+    def test_val_split_train(self):
         ds = self.mock_dataset()
         sampler_builder = SamplerBuilder(ds)
         sampler_builder.apply(val_split(True, 0.8))
@@ -64,6 +64,18 @@ class FilterBuilderTest(unittest.TestCase):
         sampler_builder = SamplerBuilder(ds)
         sampler_builder.apply(val_split(False, 0.65))
         self.assertEqual(sampler_builder.weights.sum(), 4)
+
+    def test_val_split_train(self):
+        ds = self.mock_dataset()
+        sampler_builder = SamplerBuilder(ds)
+        sampler_builder.apply(val_split(True, 0.8))
+        self.assertEqual(sampler_builder.weights.sum(), 8)
+
+    def test_val_w_partition_split_val(self):
+        ds = self.mock_dataset()
+        sampler_builder = SamplerBuilder(ds)
+        sampler_builder.apply(partition_subset(0, 2)).apply(val_split(False, 0.65))
+        self.assertEqual(sampler_builder.weights.sum(), 2)
 
 if __name__ == '__main__':
     unittest.main()

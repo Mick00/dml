@@ -11,6 +11,13 @@ from src.protocol.states.handler import Handler
 parser = get_arg_parse()
 parser.add_argument('--data_path')
 parser.add_argument('--dataset')
+parser.add_argument('--data_balance', type=bool, default=False)
+parser.add_argument('--data_n_partitions', type=int, default=-1)
+parser.add_argument('--data_partition_index', type=int, default=-1)
+parser.add_argument('--data_lower_bound', type=int, default=-1)
+parser.add_argument('--data_higher_bound', type=int, default=-1)
+parser.add_argument('--data_mean', type=int, default=-1)
+parser.add_argument('--data_std', type=int, default=-1)
 
 
 def register_data_module(handler: Handler):

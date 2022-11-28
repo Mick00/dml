@@ -6,7 +6,7 @@ from src.protocol.training.constants import TRAIN_MODEL, MODEL_TRAINED, NEXT_ROU
 from src.protocol.training.fedml.init_update_queue import InitUpdateQueue
 from src.protocol.training.init_experiment_tracking import InitExperimentTracking, InitExperimentHandler
 from src.protocol.training.models.storage.model_loader import InitModelLoader
-from src.protocol.training.start_genesis import StartGenesisTransition
+from src.protocol.training.trigger_genesis import TriggerGenesis
 from src.protocol.training.start_training_client import StartTrainingClient
 from src.protocol.training.train_model import Train, TrainingCleanUp
 
@@ -17,7 +17,7 @@ def register_training_module(handler: Handler):
     handler.register_reducer(HANDLER_STARTED, InitExperimentTracking(42))
     handler.register_reducer(HANDLER_STARTED, StartTrainingClient(120))
     handler.register_reducer(INIT_EXPERIMENT, InitExperimentHandler(100))
-    handler.register_reducer(NEW_PEER, StartGenesisTransition(100))
+    handler.register_reducer(NEW_PEER, TriggerGenesis(100))
     handler.register_reducer(NEXT_ROUND, NextRoundTransition(100))
     handler.register_reducer(TRAIN_MODEL, Train(100))
     handler.register_reducer(MODEL_TRAINED, TrainingCleanUp(100))

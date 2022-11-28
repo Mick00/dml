@@ -8,11 +8,11 @@ from src.protocol.client.messages.message import Message
 from src.protocol.training.events import NextRound
 
 
-class StartGenesisTransition(StateTransition):
+class TriggerGenesis(StateTransition):
     def transition(self, msg: Message, state: State, handler: Handler):
         peers = get_peers(state)
         current_round = get_round_id(state)
         if current_round != -1:
             return
-        if len(peers) >= get_trainer_threshold(state):
+        if len(peers) + 1 >= get_trainer_threshold(state):
             handler.queue_event(NextRound(-1))

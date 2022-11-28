@@ -1,6 +1,6 @@
-from src.datasets.events import DATA_REGISTER_HOOK
+from src.datasets.events import DATA_REGISTER_HOOK, DATASET_PREPARE
 from src.datasets.trigger_dataset_prepare import TriggerDatasetPrepare
-from src.fed_avg.configure_dataset import ConfigureDataset
+from src.datasets.sampler_conf.sampler_configurator import ConfigureSampler
 from src.nsclust.aggregate import Aggregate
 from src.nsclust.close_round import CloseRound
 from src.nsclust.constants import START_SELECTION, UPDATES_SELECTED, AGGREGATION_DONE
@@ -22,7 +22,7 @@ from src.protocol.training.fedml.share_update import ShareUpdate, ReceiveUpdate
 def register_fed_avg_module(handler: Handler):
     handler.register_reducer(CLIENT_STARTED, InitModelLoader(30))
     handler.register_reducer(HANDLER_STARTED, InitTracking(70))
-    handler.register_reducer(DATA_REGISTER_HOOK, ConfigureDataset(100))
+    handler.register_reducer(DATASET_PREPARE, ConfigureSampler(50))
     handler.register_reducer(NEXT_ROUND, TriggerDatasetPrepare(100))
     handler.register_reducer(ROUND_START, StartTrainingPhase(100))
     handler.register_reducer(MODEL_TRAINED, ShareUpdate(200))

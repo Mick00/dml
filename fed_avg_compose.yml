@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  fed_avg_node:
+    build:
+      dockerfile: ./fed_avg.Dockerfile
+      context: .
+    deploy:
+      replicas: ${N_TRAINERS}
+    environment:
+      - "BROKER_HOSTNAME=broker"
+      - "BROKER_PORT=5672"
+      - "DATASET=${DATASET}"
+      - "TRAINER_THRESHOLD=${N_TRAINERS}"
+      - "MODEL=${MODEL_NAME}"
+      - "TRACKING_URI=http://tracking:5000"
+      - "EXPERIMENT_NAME=${EXPERIMENT_NAME}"
+      - "EXTRA_ARGS=--data_n_partitions 0 --data_balance True"
+    volumes:
+      - "./data:/usr/src/app/data"
+      - "./storage:/usr/src/app/out"
+
+
