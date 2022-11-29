@@ -8,6 +8,7 @@ from src.protocol.states.transition import StateTransition
 
 
 LOG_INFO = "logging.log.info"
+LOG_WARNING = "logging.log.warning"
 
 
 class Log(Event):
@@ -25,6 +26,16 @@ class LogInfo(Log):
         super(LogInfo, self).__init__(LOG_INFO, msg, extra)
 
 
+class LogWarning(Log):
+    def __init__(self, msg, extra=None):
+        super(LogWarning, self).__init__(LOG_WARNING, msg, extra)
+
+
 class LogInfoHandler(StateTransition):
     def transition(self, event: LogInfo, state: State, handler: Handler):
         get_logger(state).info(event.msg, extra=event.extra)
+
+
+class LogWarningHandler(StateTransition):
+    def transition(self, event: LogInfo, state: State, handler: Handler):
+        get_logger(state).warning(event.msg, extra=event.extra)
