@@ -1,5 +1,4 @@
-from src.protocol.client.actions.new_peer import NewPeer
-from src.protocol.client.client_state_helpers import add_peer, get_round_id, update_round_id, get_peers
+from src.protocol.client.client_state_helpers import get_round_id, get_peers
 from src.protocol.config.config_state_helper import get_trainer_threshold
 from src.protocol.states.state import State
 from src.protocol.states.handler import Handler

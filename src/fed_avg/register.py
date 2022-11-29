@@ -1,4 +1,4 @@
-from src.datasets.events import DATA_REGISTER_HOOK, DATASET_PREPARE
+from src.datasets.events import DATASET_PREPARE
 from src.datasets.trigger_dataset_prepare import TriggerDatasetPrepare
 from src.datasets.sampler_conf.sampler_configurator import ConfigureSampler
 from src.nsclust.aggregate import Aggregate

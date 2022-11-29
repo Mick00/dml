@@ -1,5 +1,6 @@
 from src.protocol.states.event import Event
-from src.protocol.training.constants import TRAIN_MODEL, MODEL_TRAINED, ROUND_START, NEXT_ROUND, INIT_EXPERIMENT
+from src.protocol.training.constants import TRAIN_MODEL, MODEL_TRAINED, ROUND_START, NEXT_ROUND, INIT_EXPERIMENT, \
+    MAX_ROUND_REACHED
 from src.protocol.training.models.experiment import Experiment
 
 
@@ -31,3 +32,8 @@ class InitExperiment(Event):
     def __init__(self, exp_name: str):
         super(InitExperiment, self).__init__(INIT_EXPERIMENT)
         self.exp_name = exp_name
+
+
+class MaxRoundReached(Event):
+    def __init__(self):
+        super(MaxRoundReached, self).__init__(MAX_ROUND_REACHED)
