@@ -18,7 +18,8 @@ services:
       - "EXTRA_ARGS=--data_n_partitions 0 --data_balance True"
     volumes:
       - "./data:/usr/src/app/data"
-      - "./storage:/usr/src/app/out"
+      - "./storage/models:/usr/src/app/out"
+      - "./storage/logs:/usr/src/app/logs"
     depends_on:
       - broker
       - tracking

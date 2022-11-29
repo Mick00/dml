@@ -13,6 +13,7 @@ ENV EXTRA_ARGS=""
 
 RUN mkdir -p ./out
 CMD python ./src/fed_avg/bootstrap_fed_avg.py \
+    --logs /usr/src/app/logs \
     --data_path $DATASET_PATH \
     --dataset $DATASET \
     --broker_hostname $BROKER_HOSTNAME \

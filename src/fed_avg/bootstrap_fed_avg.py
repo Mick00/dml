@@ -7,6 +7,7 @@ from src.protocol.cli.constant import CLI_START
 from src.protocol.client.reducers import register_client_module
 from src.protocol.config.cli_config import get_arg_parse
 from src.protocol.config.config import register_config_module, UpdateConfig
+from src.protocol.logging.register import register_logging_module
 from src.protocol.states.event import Event
 from src.protocol.states.handler import Handler
 from src.protocol.states.reducers import HANDLER_START, register_handler_module
@@ -19,6 +20,7 @@ def bootstrap_fed_avg():
     args = parser.parse_args()
     load_dotenv()
     handler = Handler()
+    register_logging_module(handler)
     register_config_module(handler)
     register_handler_module(handler)
     if args.interactive:

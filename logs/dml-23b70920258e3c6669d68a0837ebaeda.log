@@ -1,0 +1,2 @@
+{"message": "client.new_peer", "peer_id": "e6c06fbda4e4a979fa6637af4ef55d3b", "peer_count": 1, "timestamp": "2022-11-29T18:05:01.965261Z", "level": "INFO"}
+{"message": "client.new_peer", "peer_id": "5ef4248232c395f3d3f6a9800fbcc0fd", "peer_count": 2, "timestamp": "2022-11-29T18:05:12.124019Z", "level": "INFO"}

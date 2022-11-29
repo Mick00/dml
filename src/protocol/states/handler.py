@@ -1,6 +1,7 @@
 from queue import Queue
+import signal
 
-from src.protocol.states.constants import HANDLER_MODULE, HANDLER_STOPPED
+from src.protocol.states.constants import HANDLER_MODULE, HANDLER_STOPPED, HANDLER_STOP
 from src.protocol.states.state import State
 from src.protocol.states.event import Event
 from src.protocol.states.transition import StateTransition
@@ -12,6 +13,8 @@ class Handler:
         self.reducers = {}
         self.state = State()
         self.event_queue = Queue()
+        signal.signal(signal.SIGINT, self.exit_graceful)
+        signal.signal(signal.SIGTERM, self.exit_graceful)
 
     def register_reducer(self, message_type, reducer: StateTransition):
         if message_type in self.reducers:
@@ -39,3 +42,10 @@ class Handler:
             event = self.event_queue.get()
             self.handle_event(event)
         self.handle_event(Event(HANDLER_STOPPED))
+
+    def exit_graceful(self, signum, frame):
+        print("Graceful exit")
+        self.stop()
+
+    def stop(self):
+        self.queue_event(Event(HANDLER_STOP))
