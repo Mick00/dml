@@ -45,10 +45,11 @@ class Client:
                                                      on_message_callback=self.handle_on_message)
                 self.listening_channel.start_consuming()
             except AMQPConnectionError:
-                self.handler.queue_event(LogWarning("client.broker.unreachable", extra={
-                    "hostname": self.hostname
+                self.handler.queue_event(LogWarning("client.join", extra={
+                    "hostname": self.hostname,
+                    "error": "connection"
                 }))
-                time.sleep(1)
+                time.sleep(2)
         self.handler.queue_event(Event(CLIENT_STOPPED))
 
     def quit(self):
@@ -61,9 +62,18 @@ class Client:
             self.handler.queue_event(message)
 
     def send(self, message: Message):
-        try:
-            serialized_message = self.serializer.serialize(message)
-            channel = self.get_channel()
-            channel.basic_publish(exchange=self.exchange_name, routing_key='', body=serialized_message)
-        except AMQPConnectionError:
-            print("Error: Could not connect to broker")
+        tries = 3
+        while tries > 0:
+            try:
+                serialized_message = self.serializer.serialize(message)
+                channel = self.get_channel()
+                channel.basic_publish(exchange=self.exchange_name, routing_key='', body=serialized_message)
+                tries = 0
+            except AMQPConnectionError:
+                self.handler.queue_event(LogWarning("client.send", extra={
+                    "hostname": self.hostname,
+                    "error": "connection"
+                }))
+                time.sleep(2)
+            finally:
+                tries -= 1

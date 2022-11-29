@@ -1,5 +1,6 @@
 from src.protocol.client.actions.constants import NEW_PEER
 from src.protocol.config.cli_config import get_arg_parse
+from src.protocol.logging.log_handler import LogInfoHandler, LOG_INFO, LOG_WARNING, LogWarningHandler
 from src.protocol.logging.log_new_peer import LogNewPeer
 from src.protocol.logging.log_start_round import LogStartRound
 from src.protocol.logging.log_training import LogStartTraining, LogCompletedTraining
@@ -15,6 +16,8 @@ arg_parse.add_argument("--debug", type=bool, default=False)
 
 def register_logging_module(handler: Handler):
     handler.register_reducer(HANDLER_STARTED, InitLogger(11))
+    handler.register_reducer(LOG_INFO, LogInfoHandler(10))
+    handler.register_reducer(LOG_WARNING, LogWarningHandler(10))
     handler.register_reducer(NEW_PEER, LogNewPeer(10))
     handler.register_reducer(ROUND_START, LogStartRound(10))
     handler.register_reducer(TRAIN_MODEL, LogStartTraining(10))

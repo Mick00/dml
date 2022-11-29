@@ -8,7 +8,7 @@ from src.fed_avg.events import AggregateModelTestDone
 from src.protocol.config.config_state_helper import get_experience_name
 from src.protocol.logging.log_handler import LogInfo
 from src.protocol.logging.log_training import exp_to_log_dict
-from src.protocol.logging.logger import get_logger
+from src.protocol.logging.logging_helpers import get_logger
 from src.protocol.states.event import Event
 from src.protocol.states.handler import Handler
 from src.protocol.states.state import State

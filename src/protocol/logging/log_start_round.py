@@ -1,4 +1,4 @@
-from src.protocol.logging.logger import get_logger
+from src.protocol.logging.logging_helpers import get_logger
 from src.protocol.states.handler import Handler
 from src.protocol.states.state import State
 from src.protocol.states.transition import StateTransition
