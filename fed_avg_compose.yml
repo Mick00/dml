@@ -14,9 +14,13 @@ services:
       - "MODEL=${MODEL_NAME}"
       - "TRACKING_URI=http://tracking:5000"
       - "EXPERIMENT_NAME=${EXPERIMENT_NAME}"
+      - "MAX_ROUND=${MAX_ROUND}"
       - "EXTRA_ARGS=--data_n_partitions 0 --data_balance True"
     volumes:
       - "./data:/usr/src/app/data"
       - "./storage:/usr/src/app/out"
+    depends_on:
+      - broker
+      - tracking
 
 

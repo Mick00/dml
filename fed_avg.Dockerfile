@@ -8,6 +8,7 @@ ENV TRAINER_THRESHOLD=2
 ENV MODEL=""
 ENV TRACKING_URI="http://tracking:5000"
 ENV EXPERIMENT_NAME="fed_avg"
+ENV MAX_ROUND="-1"
 ENV EXTRA_ARGS=""
 
 RUN mkdir -p ./out
@@ -20,4 +21,5 @@ CMD python ./src/fed_avg/bootstrap_fed_avg.py \
     --local_model $MODEL \
     --training_out /usr/src/app/out \
     --tracking_uri $TRACKING_URI \
-    --experiment_name $EXPERIMENT_NAME $EXTRA_ARGS
+    --experiment_name $EXPERIMENT_NAME \
+    --max_round $MAX_ROUND $EXTRA_ARGS

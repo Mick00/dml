@@ -23,5 +23,6 @@ Start RabbitMQ and mlflow with `docker compose up -d`
 ### Production
 
 1. Build the base image `docker image build -f .\dml.Dockerfile -t dml:base39 .`
-2. Launch your experience: `docker compose -f .\docker-compose.yml -f .\fed_avg_compose.yml up -d --build`
+2. Configure the .env file
+3. Launch your experience: `docker compose -f .\docker-compose.yml -f .\fed_avg_compose.yml up -d --build`
 
