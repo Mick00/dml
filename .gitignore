@@ -5,5 +5,5 @@ mlflow_data
 .env
 .idea
 storage
-*/__pycache__/*
+**/__pycache__/**
 logs

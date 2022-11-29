@@ -16,7 +16,10 @@ class TrainingClient:
                  enable_gpu=False,
                  output_dir=None,
                  tracking_uri=None,
-                 exp_name="default"
+                 exp_name="default",
+                 profiler=None,
+                 devices=None,
+                 epochs=1
                  ):
         self.trainer_id = trainer_id
         self.data_loader = data_loader
@@ -24,6 +27,9 @@ class TrainingClient:
         self.tracking_uri = tracking_uri
         self.enable_gpu = enable_gpu
         self.exp_name = exp_name
+        self.profiler = profiler
+        self.devices = devices
+        self.epochs = epochs
         self.fast_dev_run = False
 
     def get_logger(self, model: Experiment, test=False, additional_tags={}):
@@ -40,25 +46,31 @@ class TrainingClient:
         return mlf_logger
 
     def get_trainer(self, model: Experiment, test=False):
+        # to early stop callbacks=[EarlyStopping(monitor="validation_loss", mode="max")],
         if self.enable_gpu:
             return pl.Trainer(
                 default_root_dir=self.get_output_dir(),
                 accelerator="gpu",
-                devices=-1,
+                devices=self.devices,
                 auto_select_gpus=True,
                 auto_scale_batch_size="binsearch",
-                callbacks=[EarlyStopping(monitor="validation_loss", mode="max")],
                 logger=self.get_logger(model, test),
                 fast_dev_run=self.fast_dev_run,
-                max_epochs=1
+                profiler=self.profiler,
+                num_processes=self.devices,
+                max_epochs=self.epochs,
+                enable_progress_bar=False
             )
         return pl.Trainer(
             default_root_dir=self.get_output_dir(),
+            accelerator="cpu",
             auto_scale_batch_size="binsearch",
-            callbacks=[EarlyStopping(monitor="validation_loss", mode="max")],
             logger=self.get_logger(model, test),
             fast_dev_run=self.fast_dev_run,
-            max_epochs=1
+            profiler=self.profiler,
+            devices=self.devices,
+            max_epochs=self.epochs,
+            enable_progress_bar=False
         )
 
     def get_output_dir(self):

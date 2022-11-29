@@ -28,3 +28,15 @@ def get_experiment_tracking(state: State) -> ExperimentTracking:
 
 def get_max_round(state: State) -> int:
     return get_config(state).get('max_round')
+
+
+def get_training_profiler(state: State) -> int:
+    return get_config(state).get('training_profiler')
+
+
+def get_training_n_devices(state: State) -> int:
+    return get_config(state).get('training_n_dev')
+
+
+def get_n_epochs(state: State) -> int:
+    return get_config(state).get('n_epochs')

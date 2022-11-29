@@ -7,7 +7,8 @@ from src.protocol.states.handler import Handler
 from src.protocol.states.state import State
 from src.protocol.states.transition import StateTransition
 from src.protocol.training.constants import TRAINING_MODULE
-from src.protocol.training.training_state_helper import is_training_client_started, TrainingClient, TRAINING_CLIENT_KEY
+from src.protocol.training.training_state_helper import is_training_client_started, TrainingClient, TRAINING_CLIENT_KEY, \
+    get_training_profiler, get_n_epochs, get_training_n_devices
 
 
 class StartTrainingClient(StateTransition):
@@ -19,7 +20,10 @@ class StartTrainingClient(StateTransition):
                 output_dir=get_output_path(state),
                 enable_gpu=False,
                 tracking_uri=get_tracking_uri(state),
-                exp_name=get_experience_name(state)
+                exp_name=get_experience_name(state),
+                profiler=get_training_profiler(state),
+                epochs=get_n_epochs(state),
+                devices=get_training_n_devices(state)
             )
             state.update_module(TRAINING_MODULE, {
                 STARTED_KEY: True,

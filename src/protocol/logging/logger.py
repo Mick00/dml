@@ -20,8 +20,12 @@ def get_log_folder(state: State) -> str:
     return get_config(state).get("logs")
 
 
+def debug_enable(state: State) -> bool:
+    return get_config(state).get("debug")
+
+
 def verbose_level(state: State) -> int:
-    return logging.DEBUG if get_config(state).get("debug") else logging.INFO
+    return logging.DEBUG if debug_enable(state) else logging.INFO
 
 
 def get_logger(state: State) -> logging.Logger:

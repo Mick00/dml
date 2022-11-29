@@ -28,7 +28,7 @@ class ReceiveUpdate(StateTransition):
             event.data.checkpoint_uri,
             from_id
         )
-        get_logger(state).info(event.type, {
+        get_logger(state).info(event.type, extra={
             "round_id": update_meta.round_id,
             "from_id": update_meta.from_id,
             "cluster_id": update_meta.cluster_id,
