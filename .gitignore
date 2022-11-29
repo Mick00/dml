@@ -6,3 +6,4 @@ mlflow_data
 .idea
 storage
 */__pycache__/*
+logs

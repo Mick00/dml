@@ -37,7 +37,7 @@ def get_training_thread_name(model: Experiment) -> str:
 
 class TrainingCleanUp(StateTransition):
     def transition(self, event: ModelTrained, state: State, handler: Handler):
-        thread_name = get_training_thread_name(event.model)
+        thread_name = get_training_thread_name(event.exp)
         state.update_module(TRAINING_MODULE, {
             thread_name: None
         })

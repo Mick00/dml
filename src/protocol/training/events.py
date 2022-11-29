@@ -11,9 +11,9 @@ class TrainModel(Event):
 
 
 class ModelTrained(Event):
-    def __init__(self, model: Experiment):
+    def __init__(self, exp: Experiment):
         super(ModelTrained, self).__init__(MODEL_TRAINED)
-        self.model = model
+        self.exp = exp
 
 
 class NextRound(Event):

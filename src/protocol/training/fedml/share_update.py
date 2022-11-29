@@ -1,6 +1,7 @@
 from src.protocol.client.actions.send import Send
 from src.protocol.client.client_state_helpers import get_node_id
 from src.protocol.client.messages.message import Message
+from src.protocol.logging.logger import get_logger
 from src.protocol.states.handler import Handler
 from src.protocol.states.state import State
 from src.protocol.states.transition import StateTransition
@@ -12,7 +13,7 @@ from src.protocol.training.train_model import ModelTrained
 
 class ShareUpdate(StateTransition):
     def transition(self, event: ModelTrained, state: State, handler: Handler):
-        event = ClusterUpdate(event.model)
+        event = ClusterUpdate(event.exp)
         handler.queue_event(event)
         handler.queue_event(Send(event))
 
@@ -27,4 +28,11 @@ class ReceiveUpdate(StateTransition):
             event.data.checkpoint_uri,
             from_id
         )
+        get_logger(state).info(event.type, {
+            "round_id": update_meta.round_id,
+            "from_id": update_meta.from_id,
+            "cluster_id": update_meta.cluster_id,
+            "checkpoint_uri": update_meta.checkpoint_uri,
+            "model_name": update_meta.model_name
+        })
         get_update_queue(state).queue(update_meta)
