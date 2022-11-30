@@ -6,6 +6,9 @@ services:
       context: .
     deploy:
       replicas: ${N_TRAINERS}
+      resources:
+        limits:
+          cpus: '2'
     environment:
       - "BROKER_HOSTNAME=broker"
       - "BROKER_PORT=5672"
