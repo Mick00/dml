@@ -1,6 +1,8 @@
 from mlflow import MlflowClient
 from mlflow.entities import Run
+from mlflow.exceptions import RestException
 from mlflow.store.entities import PagedList
+from pytorch_lightning.loggers import mlflow
 
 
 def and_eq(query: str, key: str, value: str):
@@ -19,12 +21,19 @@ class ExperimentTracking:
         self.exp_name_to_id = {}
 
     def init(self, exp_name: str):
-        experiment = self.client.get_experiment_by_name(exp_name)
-        if experiment is None:
-            experiment_id = self.client.create_experiment(exp_name, self.output_location)
-        else:
+        try:
+            experiment = self.client.get_experiment_by_name(exp_name)
+            if experiment is None:
+                experiment_id = self.client.create_experiment(exp_name, self.output_location)
+            else:
+                experiment_id = experiment.experiment_id
+            self.exp_name_to_id[exp_name] = experiment_id
+        except RestException:
+            # Try again, an other node probably created the experiment
+            experiment = self.client.get_experiment_by_name(exp_name)
             experiment_id = experiment.experiment_id
-        self.exp_name_to_id[exp_name] = experiment_id
+            self.exp_name_to_id[exp_name] = experiment_id
+
 
     def search(self, exp_name: str, trainer_id=None, round_id=None, cluster_id=None, test=None) -> PagedList[Run]:
         query = and_eq("", "tags.trainer_id", trainer_id)
