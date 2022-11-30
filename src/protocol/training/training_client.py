@@ -1,6 +1,7 @@
 import glob
 import os
 import pytorch_lightning as pl
+import torch
 from pytorch_lightning.callbacks import EarlyStopping
 from pytorch_lightning.loggers import MLFlowLogger
 from torch.utils.data import DataLoader
@@ -21,6 +22,8 @@ class TrainingClient:
                  devices=None,
                  epochs=1
                  ):
+        if devices > 0:
+            torch.set_num_threads(devices)
         self.trainer_id = trainer_id
         self.data_loader = data_loader
         self.output_dir = output_dir
@@ -68,7 +71,7 @@ class TrainingClient:
             logger=self.get_logger(model, test),
             fast_dev_run=self.fast_dev_run,
             profiler=self.profiler,
-            devices=self.devices,
+            devices=self.devices if self.devices > 0 else None,
             max_epochs=self.epochs,
             enable_progress_bar=False
         )
@@ -88,7 +91,7 @@ class TrainingClient:
     def get_train_dataloader(self):
         train_dataset, train_sampler = self.data_loader.get_train_data()
         val_dataset, val_sampler = self.data_loader.get_val_data()
-        return DataLoader(train_dataset, batch_size=32, sampler=train_sampler), DataLoader(val_dataset, batch_size=32, sampler=val_sampler)
+        return DataLoader(train_dataset, batch_size=32, sampler=train_sampler, num_workers=self.devices), DataLoader(val_dataset, batch_size=32, sampler=val_sampler, num_workers=self.devices)
 
     def get_checkpoint_path(self, exp: Experiment):
         checkpoint_folder = os.path.join(self.get_output_dir(), exp.experiment_id, exp.run_id, "checkpoints/")

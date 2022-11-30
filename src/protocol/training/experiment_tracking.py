@@ -34,7 +34,6 @@ class ExperimentTracking:
             experiment_id = experiment.experiment_id
             self.exp_name_to_id[exp_name] = experiment_id
 
-
     def search(self, exp_name: str, trainer_id=None, round_id=None, cluster_id=None, test=None) -> PagedList[Run]:
         query = and_eq("", "tags.trainer_id", trainer_id)
         query = and_eq(query, "tags.round_id", round_id)

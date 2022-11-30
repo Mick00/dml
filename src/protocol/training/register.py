@@ -15,7 +15,7 @@ from src.protocol.training.trigger_stop import TriggerStop
 argparse = get_arg_parse()
 argparse.add_argument('--max_round', type=int, default=-1)
 argparse.add_argument('--training_profiler', default=None)
-argparse.add_argument('--training_n_dev', default=None)
+argparse.add_argument('--training_n_dev', type=int, default=0)
 argparse.add_argument('--n_epochs', default=1)
 
 
