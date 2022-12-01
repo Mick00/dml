@@ -8,7 +8,7 @@ from src.base.client.client_state_helpers import get_node_id
 from src.base.states.event import Event
 from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.event_handler import EventHandler
+from src.base.states.event_handler import EventHandlerSimple
 from src.base.training.constants import TRAINING_MODULE
 from src.base.training.events import TrainModel
 from src.base.training.models.experiment import Experiment
@@ -47,7 +47,7 @@ def run_tests(
     handler.queue_event(CusterSelectionTestCompleted(round_id))
 
 
-class StartClusterSelectionTests(EventHandler):
+class StartClusterSelectionTests(EventHandlerSimple):
     def transition(self, event: SelectCluster, state: State, handler: EventListener):
         strategy = get_strategy(state).for_round(event.round_id - 1)
         training_client = get_training_client(state)
@@ -61,7 +61,7 @@ class StartClusterSelectionTests(EventHandler):
         })
 
 
-class SelectBestCluster(EventHandler):
+class SelectBestCluster(EventHandlerSimple):
     def transition(self, event: CusterSelectionTestCompleted, state: State, handler: EventListener):
         exp_tracking = get_experiment_tracking(state)
         my_id = get_node_id(state)

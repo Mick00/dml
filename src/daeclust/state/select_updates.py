@@ -8,12 +8,12 @@ from src.base.client.actions.send import Send
 from src.base.client.client_state_helpers import get_node_id
 from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.event_handler import EventHandler
+from src.base.states.event_handler import EventHandlerSimple
 from src.base.training.models.experiment import load_model
 from src.base.training.models.operations import weight_divergence
 
 
-class WDUpdateSelector(EventHandler):
+class WDUpdateSelector(EventHandlerSimple):
 
     def transition(self, event: StartUpdateSelection, state: State, handler: EventListener):
         my_id = get_node_id(state)

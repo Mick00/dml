@@ -4,7 +4,7 @@ from src.base.logging.logging_helpers import get_logger
 from src.base.states.event import Event
 from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.event_handler import EventHandler
+from src.base.states.event_handler import EventHandlerSimple
 
 
 LOG_INFO = "logging.log.info"
@@ -31,11 +31,11 @@ class LogWarning(Log):
         super(LogWarning, self).__init__(LOG_WARNING, msg, extra)
 
 
-class LogInfoHandler(EventHandler):
+class LogInfoHandler(EventHandlerSimple):
     def transition(self, event: LogInfo, state: State, handler: EventListener):
         get_logger(state).info(event.msg, extra=event.extra)
 
 
-class LogWarningHandler(EventHandler):
+class LogWarningHandler(EventHandlerSimple):
     def transition(self, event: LogInfo, state: State, handler: EventListener):
         get_logger(state).warning(event.msg, extra=event.extra)

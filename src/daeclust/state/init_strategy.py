@@ -8,11 +8,11 @@ from src.base.config.config_state_helper import get_output_path, get_local_model
 from src.base.states.event import Event
 from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.event_handler import EventHandler
+from src.base.states.event_handler import EventHandlerSimple
 from src.base.training.events import StartRound
 
 
-class InitStrategy(EventHandler):
+class InitStrategy(EventHandlerSimple):
     def transition(self, event: Event, state: State, handler: EventListener):
         my_id = get_node_id(state)
         cache_path = os.path.join(get_output_path(state), "cache", my_id)
@@ -22,6 +22,6 @@ class InitStrategy(EventHandler):
         })
 
 
-class InitStrategyForRound(EventHandler):
+class InitStrategyForRound(EventHandlerSimple):
     def transition(self, event: StartRound, state: State, handler: EventListener):
         get_strategy(state).init_round(event.round_id)

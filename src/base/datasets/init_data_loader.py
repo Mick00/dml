@@ -4,10 +4,10 @@ from src.base.datasets.events import DataRegisterHook
 from src.base.states.event import Event
 from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.event_handler import EventHandler
+from src.base.states.event_handler import EventHandlerSimple
 
 
-class InitDataLoader(EventHandler):
+class InitDataLoader(EventHandlerSimple):
     def transition(self, event: Event, state: State, handler: EventListener):
         data_loader = DataLoader()
         state.update_module(DATA_MODULE, {

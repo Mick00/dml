@@ -2,7 +2,7 @@ from threading import Thread
 
 from src.base.states.state import State
 from src.base.states.event_listener import EventListener
-from src.base.states.event_handler import EventHandler
+from src.base.states.event_handler import EventHandlerSimple
 from src.base.training.constants import  TRAIN_MODEL, MODEL_TRAINED, TRAINING_MODULE
 from src.base.training.events import TrainModel, ModelTrained
 from src.base.training.models.experiment import Experiment
@@ -15,7 +15,7 @@ def train_model(exp: Experiment, training_client: TrainingClient, handler: Event
     handler.queue_event(ModelTrained(exp))
 
 
-class Train(EventHandler):
+class Train(EventHandlerSimple):
     def transition(self, event: TrainModel, state: State, handler: EventListener):
         training_state = get_training_state(state)
         thread_name = get_training_thread_name(event.exp)
@@ -35,7 +35,7 @@ def get_training_thread_name(model: Experiment) -> str:
     return f"training-{model.round_id}-{model.cluster_id}"
 
 
-class TrainingCleanUp(EventHandler):
+class TrainingCleanUp(EventHandlerSimple):
     def transition(self, event: ModelTrained, state: State, handler: EventListener):
         thread_name = get_training_thread_name(event.exp)
         state.update_module(TRAINING_MODULE, {

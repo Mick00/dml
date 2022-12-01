@@ -2,7 +2,7 @@ from src.base.client.client_state_helpers import get_peers
 from src.base.states.event import Event
 from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.event_handler import EventHandler
+from src.base.states.event_handler import EventHandlerSimple
 from src.nsclust.constants import START_SELECTION
 from src.base.training.fedml.update_queue import QueuedUpdate
 
@@ -13,7 +13,7 @@ class StartUpdateSelection(Event):
         self.round_id = round_id
 
 
-class StartUpdateSelectionTransition(EventHandler):
+class StartUpdateSelectionTransition(EventHandlerSimple):
     def transition(self, event: QueuedUpdate, state: State, handler: EventListener):
         if len(event.queue) >= len(get_peers(state)) + 1:
             handler.queue_event(StartUpdateSelection(event.update.round_id))

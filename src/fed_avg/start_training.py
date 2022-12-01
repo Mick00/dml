@@ -7,21 +7,20 @@ from src.base.client.client_state_helpers import get_node_id, get_peers, get_nod
 from src.base.config.config_state_helper import get_local_model_name, get_experience_name
 from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.event_handler import EventHandler
+from src.base.states.event_handler import EventHandlerSimple
 from src.base.training.constants import TRAINING_MODULE
 from src.base.training.events import TrainModel, StartRound
 from src.base.training.models.experiment import Experiment
 from src.base.training.models.model_factory import create_model
 
 
-class StartTrainingPhase(EventHandler):
+class StartTrainingPhase(EventHandlerSimple):
     def transition(self, event: StartRound, state: State, handler: EventListener):
         round_id = event.data.round_id
         if round_id == 0:
             state.update_module(TRAINING_MODULE, {
                 CURRENT_CLUSTER_KEY: GLOBAL_CLUSTER_ID
             })
-            my_id = get_node_id(state)
             rank = get_node_rank(state)
             """Make the peer with the lowest ID create the seed model"""
             if rank == 0:

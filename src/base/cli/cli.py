@@ -4,14 +4,14 @@ from ..states.constants import HANDLER_STOP
 from ..states.event import Event
 from ..states.event_listener import EventListener
 from ..states.state import State
-from ..states.event_handler import EventHandler
+from ..states.event_handler import EventHandlerSimple
 
 
 def register_cli_module(handler: EventListener):
     handler.register_handler(CLI_START, StartClient())
 
 
-class StartClient(EventHandler):
+class StartClient(EventHandlerSimple):
     def __init__(self):
         self.exit = False
 

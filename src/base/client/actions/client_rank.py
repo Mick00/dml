@@ -3,10 +3,10 @@ from src.base.client.constants import CLIENT_MODULE
 from src.base.states.event import Event
 from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.event_handler import EventHandler
+from src.base.states.event_handler import EventHandlerSimple
 
 
-class SetClientRank(EventHandler):
+class SetClientRank(EventHandlerSimple):
 
     def transition(self, event: Event, state: State, handler: EventListener):
         my_id = get_node_id(state)

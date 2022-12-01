@@ -6,10 +6,10 @@ from src.base.datasets.data_helpers import get_data_path
 from src.base.datasets.data_loader import get_data_loader
 from src.base.states.event import Event
 from src.base.states.state import State
-from src.base.states.event_handler import Handler, EventHandler
+from src.base.states.event_handler import Handler, EventHandlerSimple
 
 
-class MnistRegister(EventHandler):
+class MnistRegister(EventHandlerSimple):
     def transition(self, event: Event, state: State, handler: Handler):
         data_loader = get_data_loader(state)
         data_path = get_data_path(state)

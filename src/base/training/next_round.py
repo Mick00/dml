@@ -1,12 +1,12 @@
 from src.base.client.client_state_helpers import update_round_id, get_round_id
 from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.event_handler import EventHandler
+from src.base.states.event_handler import EventHandlerSimple
 from src.base.training.events import NextRound, StartRound, MaxRoundReached
 from src.base.training.training_state_helper import get_max_round
 
 
-class NextRoundTransition(EventHandler):
+class NextRoundTransition(EventHandlerSimple):
     def transition(self, event: NextRound, state: State, handler: EventListener):
         current_round = get_round_id(state)
         if current_round != event.current_round:

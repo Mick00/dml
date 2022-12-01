@@ -12,16 +12,29 @@ from src.base.states.event_handler import EventHandler, Handler
 
 
 class ConfigureSampler(EventHandler):
-    def transition(self, event: Event, state: State, handler: Handler):
+    def _transition(self, event: Event, state: State, handler: Handler):
         data_loader = get_data_loader(state)
         rules = []
+        log_dict = {}
         if apply_balance_rule(state):
             rules.append(balanced_weight())
+            log_dict["balanced"] = True
         if apply_partitions_rule(state):
-            rules.append(partition_subset(data_partition_index(state), data_n_partitions(state)))
+            index = data_partition_index(state)
+            n_partitions =data_n_partitions(state)
+            rules.append(partition_subset(index, n_partitions))
+            log_dict = log_dict | {"partition_index": index, "n_partitions": n_partitions}
 
         if apply_target_bounds(state):
-            rules.append(target_subset(get_lower_bound(state), get_higher_bound(state)))
-        elif apply_normal_probability(state):
-            rules.append(normal_probability_weights(get_distribution_mean(state), get_distribution_std(state)))
+            lower_bound = get_lower_bound(state)
+            higher_bound = get_higher_bound(state)
+            rules.append(target_subset(lower_bound, higher_bound))
+            log_dict = log_dict | {"lower_bound": lower_bound, "higher_bound": higher_bound }
+        if apply_normal_probability(state):
+            mean = get_distribution_mean(state)
+            std = get_distribution_std(state)
+            rules.append(normal_probability_weights(mean, std))
+            log_dict = log_dict | {"mean": mean, "std": std}
         data_loader.set_sampling_rules(rules)
+        data_loader.set_sampler_tags(log_dict)
+        return [self.log_info("sampler.config", log_dict)]

@@ -2,14 +2,14 @@ import unittest
 
 from src.base.client.messages.message import Message
 from src.base.states.state import State
-from src.base.states.event_listener import EventListener, EventHandler
+from src.base.states.event_listener import EventListener, EventHandlerSimple
 
 
 def message_factory(from_id="test_id", type="test_type", round_id=10, data=None):
     return Message(from_id, type, round_id, data)
 
 
-class FakeReducer(EventHandler):
+class FakeReducer(EventHandlerSimple):
 
     def __init__(self, key, value, priority=100):
         super().__init__(priority)

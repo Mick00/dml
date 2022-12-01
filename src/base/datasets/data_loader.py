@@ -15,6 +15,7 @@ class DataLoader:
         self.train_sampler = None
         self.val_sampler = None
         self.test_sampler = None
+        self.sampler_tags = None
 
     def register_loader(self, key: str, fn):
         self.loaders_fn[key] = fn
@@ -22,13 +23,18 @@ class DataLoader:
     def set_sampling_rules(self, sampling_rules):
         self.sampling_rules = sampling_rules
 
-    def load_data(self, state: State):
-        loader_fn = self.loaders_fn.get(get_dataset(state))
+    def set_sampler_tags(self, tags: dict):
+        self.sampler_tags = tags
+
+    def load_data(self, state: State) -> str:
+        dataset = get_dataset(state)
+        loader_fn = self.loaders_fn.get(dataset)
         self.train_dataset, self.test_dataset = loader_fn(state)
         train_sampler = self.get_sampler(self.train_dataset)
         self.test_sampler = self.get_sampler(self.test_dataset)
         self.train_sampler = train_sampler.copy().apply(val_split(True, self.train_ratio))
         self.val_sampler = train_sampler.copy().apply(val_split(False, self.train_ratio))
+        return dataset
 
     def get_sampler(self, dataset):
         sampler_builder = SamplerBuilder(dataset)

@@ -4,7 +4,7 @@ import signal
 from src.base.states.constants import HANDLER_MODULE, HANDLER_STOPPED, HANDLER_STOP
 from src.base.states.state import State
 from src.base.states.event import Event
-from src.base.states.event_handler import EventHandler
+from src.base.states.event_handler import EventHandlerSimple
 
 
 class EventListener:
@@ -16,7 +16,7 @@ class EventListener:
         signal.signal(signal.SIGINT, self.exit_graceful)
         signal.signal(signal.SIGTERM, self.exit_graceful)
 
-    def register_handler(self, message_type, reducer: EventHandler):
+    def register_handler(self, message_type, reducer: EventHandlerSimple):
         if message_type in self.handlers:
             self.handlers[message_type].append(reducer)
             self.handlers[message_type].sort(key=lambda reducer: reducer.priority)

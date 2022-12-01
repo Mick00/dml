@@ -3,10 +3,10 @@ from src.daeclust.state.events import UpdatePooled, StartUpdateSelection
 from src.base.client.client_state_helpers import get_peers
 from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.event_handler import EventHandler
+from src.base.states.event_handler import EventHandlerSimple
 
 
-class TriggerUpdateSelection(EventHandler):
+class TriggerUpdateSelection(EventHandlerSimple):
     def transition(self, event: UpdatePooled, state: State, handler: EventListener):
         round_id = event.update.round_id
         round_strategy = get_strategy(state).for_round(round_id)

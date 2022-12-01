@@ -4,21 +4,21 @@ from src.base.client.messages.message import Message
 from src.base.logging.logging_helpers import get_logger
 from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.event_handler import EventHandler
+from src.base.states.event_handler import EventHandlerSimple
 from src.base.training.fedml.events import ClusterUpdate
 from src.base.training.fedml.fedml_state_helper import get_update_queue
 from src.base.training.fedml.model_update_meta import ModelUpdateMeta
 from src.base.training.train_model import ModelTrained
 
 
-class ShareUpdate(EventHandler):
+class ShareUpdate(EventHandlerSimple):
     def transition(self, event: ModelTrained, state: State, handler: EventListener):
         event = ClusterUpdate(event.exp)
         handler.queue_event(event)
         handler.queue_event(Send(event))
 
 
-class ReceiveUpdate(EventHandler):
+class ReceiveUpdate(EventHandlerSimple):
     def transition(self, event: Message, state: State, handler: EventListener):
         from_id = event.from_id if hasattr(event, "from_id") else get_node_id(state)
         update_meta = ModelUpdateMeta(

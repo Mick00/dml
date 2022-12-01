@@ -3,11 +3,11 @@ from src.daeclust.state.events import TrainerSelectedUpdates
 from src.base.client.client_state_helpers import get_peers
 from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.event_handler import EventHandler
+from src.base.states.event_handler import EventHandlerSimple
 from src.base.training.events import NextRound
 
 
-class TriggerNextRound(EventHandler):
+class TriggerNextRound(EventHandlerSimple):
     def transition(self, event: TrainerSelectedUpdates, state: State, handler: EventListener):
         peer_count = len(get_peers(state)) + 1
         round_id = event.data.round_id

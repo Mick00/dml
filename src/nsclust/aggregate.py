@@ -2,10 +2,10 @@ from src.nsclust.nsclust_helpers import get_model_loader
 from src.nsclust.events import SelectedUpdates, AggregationCompleted
 from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.event_handler import EventHandler
+from src.base.states.event_handler import EventHandlerSimple
 
 
-class Aggregate(EventHandler):
+class Aggregate(EventHandlerSimple):
     def transition(self, event: SelectedUpdates, state: State, handler: EventListener):
         update_queue = event.selected_updates
         model_loader = get_model_loader(state)

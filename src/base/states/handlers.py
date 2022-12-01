@@ -4,7 +4,7 @@ from .constants import HANDLER_START, HANDLER_STOP, HANDLER_MODULE, HANDLER_STAR
 from ..states.event import Event
 from ..states.event_listener import EventListener
 from ..states.state import State
-from ..states.event_handler import EventHandler
+from ..states.event_handler import EventHandlerSimple
 
 
 def register_handler_module(handler: EventListener):
@@ -12,7 +12,7 @@ def register_handler_module(handler: EventListener):
     handler.register_handler(HANDLER_STOP, StopHandler(100))
 
 
-class StartHandler(EventHandler):
+class StartHandler(EventHandlerSimple):
 
     def transition(self, event: Event, state: State, handler: EventListener):
         mod_state = state.get_module_state(HANDLER_MODULE)
@@ -28,7 +28,7 @@ class StartHandler(EventHandler):
             handler.queue_event(Event(HANDLER_STARTED))
 
 
-class StopHandler(EventHandler):
+class StopHandler(EventHandlerSimple):
 
     def transition(self, event: Event, state: State, handler: EventListener):
         state.update_module(HANDLER_MODULE, {

@@ -12,7 +12,7 @@ from src.base.logging.logging_helpers import get_logger
 from src.base.states.event import Event
 from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.event_handler import EventHandler
+from src.base.states.event_handler import EventHandlerSimple
 from src.base.training.constants import TRAINING_MODULE, EXPERIMENT_TEST, EXPERIMENT_TESTED
 from src.base.training.training_client import TrainingClient
 from src.base.training.training_state_helper import get_training_client
@@ -32,7 +32,7 @@ def run_tests(
     handler.queue_event(AggregateModelTestDone(round_id))
 
 
-class TestAggregate(EventHandler):
+class TestAggregate(EventHandlerSimple):
     def transition(self, event: AggregationCompleted, state: State, handler: EventListener):
         get_logger(state).info("aggregation.test", extra={"round_id": event.round_id})
         model_loader = get_model_loader(state)

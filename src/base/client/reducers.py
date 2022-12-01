@@ -17,7 +17,7 @@ from ..states.constants import HANDLER_STOP, HANDLER_STARTED
 from ..states.event import Event
 from ..states.event_listener import EventListener
 from ..states.state import State
-from ..states.event_handler import EventHandler
+from ..states.event_handler import EventHandlerSimple
 
 
 def register_client_module(handler: EventListener):
@@ -34,7 +34,7 @@ def register_client_module(handler: EventListener):
     handler.register_handler(NEW_PEER, SetClientRank(10))
 
 
-class InitClientModule(EventHandler):
+class InitClientModule(EventHandlerSimple):
     def transition(self, event: Event, state: State, handler: EventListener):
         if not client_is_started(state):
             id = secrets.token_hex(16)
@@ -43,7 +43,7 @@ class InitClientModule(EventHandler):
             })
 
 
-class StartClient(EventHandler):
+class StartClient(EventHandlerSimple):
     def transition(self, event: Event, state: State, handler: EventListener):
         if not client_is_started(state):
             id = get_node_id(state)
@@ -61,7 +61,7 @@ class StartClient(EventHandler):
             handler.queue_event(Event(CLIENT_STARTED))
 
 
-class StopClient(EventHandler):
+class StopClient(EventHandlerSimple):
     def transition(self, event: Event, state: State, handler: EventListener):
         if client_is_started(state):
             set_is_stopping(state, True)
@@ -69,7 +69,7 @@ class StopClient(EventHandler):
             client.quit()
 
 
-class StoppedClient(EventHandler):
+class StoppedClient(EventHandlerSimple):
     def transition(self, event: Event, state: State, handler: EventListener):
         state.update_module(CLIENT_MODULE, {
             "started": False,
@@ -78,7 +78,7 @@ class StoppedClient(EventHandler):
         })
 
 
-class SendClient(EventHandler):
+class SendClient(EventHandlerSimple):
     def transition(self, event: Event, state: State, handler: EventListener):
         if client_is_started(state):
             client = get_client(state)

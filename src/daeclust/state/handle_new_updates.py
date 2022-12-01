@@ -4,11 +4,11 @@ from src.base.client.client_state_helpers import get_node_id
 from src.base.client.messages.message import Message
 from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.event_handler import EventHandler
+from src.base.states.event_handler import EventHandlerSimple
 from src.base.training.fedml.model_update_meta import ModelUpdateMeta
 
 
-class UpdateHandler(EventHandler):
+class UpdateHandler(EventHandlerSimple):
     def transition(self, event: Message, state: State, handler: EventListener):
         from_id = event.from_id if hasattr(event, "from_id") else get_node_id(state)
         update_meta = ModelUpdateMeta(

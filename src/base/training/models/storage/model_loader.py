@@ -3,13 +3,13 @@ import pytorch_lightning as pl
 from src.base.config.config_state_helper import get_output_path
 from src.base.states.event import Event
 from src.base.states.state import State
-from src.base.states.event_handler import EventHandler, Handler
+from src.base.states.event_handler import EventHandlerSimple, Handler
 from src.base.training.models.storage.cluster import Cluster
 from src.base.training.constants import TRAINING_MODULE
 from src.base.training.models.storage.round import Round
 
 
-class InitModelLoader(EventHandler):
+class InitModelLoader(EventHandlerSimple):
     def transition(self, event: Event, state: State, handler: Handler):
         model_loader = ModelLoader(get_output_path(state))
         state.get_module_state(TRAINING_MODULE).update({

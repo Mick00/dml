@@ -1,6 +1,6 @@
 from src.base.config.constants import UPDATE_CONFIG, CONFIG_MODULE
 from src.base.states.event import Event
-from src.base.states.event_handler import EventHandler
+from src.base.states.event_handler import EventHandlerSimple
 from src.base.states.state import State
 from src.base.states.event_listener import EventListener
 
@@ -14,6 +14,6 @@ class UpdateConfig(Event):
         super(UpdateConfig, self).__init__(UPDATE_CONFIG, config)
 
 
-class UpdateConfigTransition(EventHandler):
+class UpdateConfigTransition(EventHandlerSimple):
     def transition(self, event: UpdateConfig, state: State, handler: EventListener):
         state.update_module(CONFIG_MODULE, event.data.__dict__)
