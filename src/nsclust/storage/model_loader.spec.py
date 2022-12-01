@@ -4,8 +4,8 @@ import unittest
 
 import torch
 
-from src.protocol.training.models.storage.model_loader import ModelLoader
-from src.protocol.training.models.model_factory import create_model
+from src.base.training.models.storage.model_loader import ModelLoader
+from src.base.training.models.model_factory import create_model
 
 TEST_SAVE_PATH = "C:\\Users\\micdu\\Code\\pythonProject\\dmtl\\save_test_model\\"
 MODEL_NAME = "cae_lenet"

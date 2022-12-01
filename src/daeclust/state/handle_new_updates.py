@@ -1,11 +1,11 @@
 from src.daeclust.daecluste_helper import get_strategy
 from src.daeclust.state.events import UpdatePooled
-from src.protocol.client.client_state_helpers import get_node_id
-from src.protocol.client.messages.message import Message
-from src.protocol.states.handler import Handler
-from src.protocol.states.state import State
-from src.protocol.states.transition import StateTransition
-from src.protocol.training.fedml.model_update_meta import ModelUpdateMeta
+from src.base.client.client_state_helpers import get_node_id
+from src.base.client.messages.message import Message
+from src.base.states.handler import Handler
+from src.base.states.state import State
+from src.base.states.transition import StateTransition
+from src.base.training.fedml.model_update_meta import ModelUpdateMeta
 
 
 class UpdateHandler(StateTransition):

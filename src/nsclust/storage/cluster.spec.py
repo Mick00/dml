@@ -1,6 +1,6 @@
 import unittest
 
-from src.protocol.training.models.storage.cluster import Cluster
+from src.base.training.models.storage.cluster import Cluster
 
 
 class ModelLoaderTest(unittest.TestCase):

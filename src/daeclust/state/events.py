@@ -1,6 +1,6 @@
 from src.daeclust.constants import AGGREGATION_UPDATE_SELECTION_DONE, AGGREGATION_UPDATE_POOLED, AGGREGATION_UPDATE_SELECTION_START
-from src.protocol.states.event import Event
-from src.protocol.training.fedml.model_update_meta import ModelUpdateMeta
+from src.base.states.event import Event
+from src.base.training.fedml.model_update_meta import ModelUpdateMeta
 
 
 class UpdatePooled(Event):

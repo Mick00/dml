@@ -1,8 +1,8 @@
 from src.nsclust.nsclust_helpers import get_model_loader
 from src.nsclust.events import SelectedUpdates, AggregationCompleted
-from src.protocol.states.handler import Handler
-from src.protocol.states.state import State
-from src.protocol.states.transition import StateTransition
+from src.base.states.handler import Handler
+from src.base.states.state import State
+from src.base.states.transition import StateTransition
 
 
 class Aggregate(StateTransition):

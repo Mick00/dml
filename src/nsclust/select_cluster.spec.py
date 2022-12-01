@@ -3,13 +3,13 @@ from unittest.mock import Mock
 
 from src.nsclust.nsclust_helpers import get_cluster_selection_exp_name
 from src.nsclust.select_cluster import SelectBestCluster, CusterSelectionTestCompleted
-from src.protocol.client.client_state_helpers import init_client
-from src.protocol.config.config import UpdateConfig, UpdateConfigTransition
-from src.protocol.states.event import Event
-from src.protocol.states.state import State
-from src.protocol.training.events import InitExperiment
-from src.protocol.training.init_experiment_tracking import InitExperimentTracking, InitExperimentHandler
-from src.protocol.training.models.storage.cluster import Cluster
+from src.base.client.client_state_helpers import init_client
+from src.base.config.config import UpdateConfig, UpdateConfigTransition
+from src.base.states.event import Event
+from src.base.states.state import State
+from src.base.training.events import InitExperiment
+from src.base.training.init_experiment_tracking import InitExperimentTracking, InitExperimentHandler
+from src.base.training.models.storage.cluster import Cluster
 
 
 class ModelLoaderTest(unittest.TestCase):

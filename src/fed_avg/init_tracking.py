@@ -1,9 +1,9 @@
-from src.protocol.config.config_state_helper import get_experience_name
-from src.protocol.states.event import Event
-from src.protocol.states.handler import Handler
-from src.protocol.states.state import State
-from src.protocol.states.transition import StateTransition
-from src.protocol.training.events import InitExperiment
+from src.base.config.config_state_helper import get_experience_name
+from src.base.states.event import Event
+from src.base.states.handler import Handler
+from src.base.states.state import State
+from src.base.states.transition import StateTransition
+from src.base.training.events import InitExperiment
 
 
 class InitTracking(StateTransition):

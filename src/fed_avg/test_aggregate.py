@@ -5,17 +5,17 @@ from src.nsclust.nsclust_helpers import get_model_loader
 from src.nsclust.storage.model_loader import ModelLoader
 from src.fed_avg.constant import GLOBAL_CLUSTER_ID
 from src.fed_avg.events import AggregateModelTestDone
-from src.protocol.config.config_state_helper import get_experience_name
-from src.protocol.logging.log_handler import LogInfo
-from src.protocol.logging.log_training import exp_to_log_dict
-from src.protocol.logging.logging_helpers import get_logger
-from src.protocol.states.event import Event
-from src.protocol.states.handler import Handler
-from src.protocol.states.state import State
-from src.protocol.states.transition import StateTransition
-from src.protocol.training.constants import TRAINING_MODULE, EXPERIMENT_TEST, EXPERIMENT_TESTED
-from src.protocol.training.training_client import TrainingClient
-from src.protocol.training.training_state_helper import get_training_client
+from src.base.config.config_state_helper import get_experience_name
+from src.base.logging.log_handler import LogInfo
+from src.base.logging.log_training import exp_to_log_dict
+from src.base.logging.logging_helpers import get_logger
+from src.base.states.event import Event
+from src.base.states.handler import Handler
+from src.base.states.state import State
+from src.base.states.transition import StateTransition
+from src.base.training.constants import TRAINING_MODULE, EXPERIMENT_TEST, EXPERIMENT_TESTED
+from src.base.training.training_client import TrainingClient
+from src.base.training.training_state_helper import get_training_client
 
 
 def run_tests(

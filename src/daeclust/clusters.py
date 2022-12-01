@@ -4,8 +4,8 @@ import pytorch_lightning as pl
 import torch
 from torch import nn
 
-from src.protocol.training.models.model_factory import create_model
-from src.protocol.training.models.operations import merge_models
+from src.base.training.models.model_factory import create_model
+from src.base.training.models.operations import merge_models
 
 
 class Cluster:

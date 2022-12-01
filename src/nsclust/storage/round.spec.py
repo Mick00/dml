@@ -6,8 +6,8 @@ from unittest.mock import Mock
 import torch
 from torch import nn
 
-from src.protocol.training.models.storage.round import Round
-from src.protocol.training.models.operations import calc_diff
+from src.base.training.models.storage.round import Round
+from src.base.training.models.operations import calc_diff
 
 TEST_SAVE_PATH = "C:\\Users\\micdu\\Code\\pythonProject\\dmtl\\save_test_model\\"
 

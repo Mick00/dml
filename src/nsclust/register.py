@@ -8,12 +8,12 @@ from src.nsclust.select_updates import AcceptAllUpdates
 from src.nsclust.start_selection import StartUpdateSelectionTransition
 from src.nsclust.start_training import StartTrainingPhase
 from src.nsclust.storage.init_model_storage import InitModelLoader
-from src.protocol.client.constants import CLIENT_STARTED
-from src.protocol.states.constants import HANDLER_STARTED
-from src.protocol.states.handler import Handler
-from src.protocol.training.constants import ROUND_START, MODEL_TRAINED
-from src.protocol.training.fedml.constants import TRAINING_UPDATE_QUEUED, TRAINING_UPDATE_SHARE
-from src.protocol.training.fedml.share_update import ShareUpdate, ReceiveUpdate
+from src.base.client.constants import CLIENT_STARTED
+from src.base.states.constants import HANDLER_STARTED
+from src.base.states.handler import Handler
+from src.base.training.constants import ROUND_START, MODEL_TRAINED
+from src.base.training.fedml.constants import TRAINING_UPDATE_QUEUED, TRAINING_UPDATE_SHARE
+from src.base.training.fedml.share_update import ShareUpdate, ReceiveUpdate
 
 
 def register_nsclust_module(handler: Handler):

@@ -1,17 +1,16 @@
 from dotenv import load_dotenv
 
 from src.daeclust.register import register_daeclust_module
-from src.datasets.register import register_data_module
-from src.nsclust.register import register_nsclust_module
-from src.protocol.cli.cli import register_cli_module
-from src.protocol.cli.constant import CLI_START
-from src.protocol.client.reducers import register_client_module
-from src.protocol.config.cli_config import get_arg_parse
-from src.protocol.config.config import register_config_module, UpdateConfig
-from src.protocol.states.event import Event
-from src.protocol.states.handler import Handler
-from src.protocol.states.reducers import HANDLER_START, register_handler_module
-from src.protocol.training.register import register_training_module
+from src.base.datasets.register import register_data_module
+from src.base.cli.cli import register_cli_module
+from src.base.cli.constant import CLI_START
+from src.base.client.reducers import register_client_module
+from src.base.config.cli_config import get_arg_parse
+from src.base.config.config import register_config_module, UpdateConfig
+from src.base.states.event import Event
+from src.base.states.handler import Handler
+from src.base.states.reducers import HANDLER_START, register_handler_module
+from src.base.training.register import register_training_module
 
 parser = get_arg_parse()
 

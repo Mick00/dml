@@ -3,7 +3,7 @@ import secrets
 import unittest
 
 from src.daeclust.strategy import compute_cluster_id, AggregationStrategy
-from src.protocol.training.fedml.model_update_meta import ModelUpdateMeta
+from src.base.training.fedml.model_update_meta import ModelUpdateMeta
 
 
 class StrategyTest(unittest.TestCase):

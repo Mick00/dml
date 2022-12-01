@@ -1,5 +1,5 @@
 from src.fed_avg.constant import AGGREGATE_TEST_DONE
-from src.protocol.states.event import Event
+from src.base.states.event import Event
 
 
 class AggregateModelTestDone(Event):

@@ -1,8 +1,8 @@
 from src.nsclust.events import AggregationCompleted
-from src.protocol.states.handler import Handler
-from src.protocol.states.state import State
-from src.protocol.states.transition import StateTransition
-from src.protocol.training.events import NextRound
+from src.base.states.handler import Handler
+from src.base.states.state import State
+from src.base.states.transition import StateTransition
+from src.base.training.events import NextRound
 
 
 class CloseRound(StateTransition):

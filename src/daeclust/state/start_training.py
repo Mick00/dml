@@ -2,15 +2,15 @@ import secrets
 
 from src.nsclust.nsclust_helpers import CURRENT_CLUSTER_KEY, get_cluster_training_exp_name
 from src.nsclust.select_cluster import SelectCluster
-from src.protocol.config.config_state_helper import get_local_model_name
-from src.protocol.states.event import Event
-from src.protocol.states.handler import Handler
-from src.protocol.states.state import State
-from src.protocol.states.transition import StateTransition
-from src.protocol.training.constants import TRAINING_MODULE
-from src.protocol.training.events import TrainModel
-from src.protocol.training.models.experiment import Experiment
-from src.protocol.training.models.model_factory import create_model
+from src.base.config.config_state_helper import get_local_model_name
+from src.base.states.event import Event
+from src.base.states.handler import Handler
+from src.base.states.state import State
+from src.base.states.transition import StateTransition
+from src.base.training.constants import TRAINING_MODULE
+from src.base.training.events import TrainModel
+from src.base.training.models.experiment import Experiment
+from src.base.training.models.model_factory import create_model
 
 
 class StartTrainingPhase(StateTransition):

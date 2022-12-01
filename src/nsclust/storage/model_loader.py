@@ -2,12 +2,12 @@ import pytorch_lightning as pl
 
 from src.nsclust.storage.cluster import Cluster
 from src.nsclust.storage.round import Round
-from src.protocol.config.config_state_helper import get_output_path
-from src.protocol.states.event import Event
-from src.protocol.states.state import State
-from src.protocol.states.transition import StateTransition, Handler
-from src.protocol.training.models.experiment import Experiment
-from src.protocol.training.constants import TRAINING_MODULE
+from src.base.config.config_state_helper import get_output_path
+from src.base.states.event import Event
+from src.base.states.state import State
+from src.base.states.transition import StateTransition, Handler
+from src.base.training.models.experiment import Experiment
+from src.base.training.constants import TRAINING_MODULE
 
 
 

@@ -1,9 +1,9 @@
 from src.daeclust.daecluste_helper import get_strategy
 from src.daeclust.state.events import UpdatePooled, StartUpdateSelection
-from src.protocol.client.client_state_helpers import get_peers
-from src.protocol.states.handler import Handler
-from src.protocol.states.state import State
-from src.protocol.states.transition import StateTransition
+from src.base.client.client_state_helpers import get_peers
+from src.base.states.handler import Handler
+from src.base.states.state import State
+from src.base.states.transition import StateTransition
 
 
 class TriggerUpdateSelection(StateTransition):

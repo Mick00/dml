@@ -1,6 +1,6 @@
 from src.daeclust.constants import DAECLUST_MODULE
 from src.daeclust.strategy import AggregationStrategy
-from src.protocol.states.state import State
+from src.base.states.state import State
 
 
 STRATEGY_KEY = "strategy"

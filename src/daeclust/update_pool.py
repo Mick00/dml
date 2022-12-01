@@ -1,4 +1,4 @@
-from src.protocol.training.fedml.model_update_meta import ModelUpdateMeta
+from src.base.training.fedml.model_update_meta import ModelUpdateMeta
 
 
 class UpdatePools:

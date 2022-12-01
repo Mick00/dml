@@ -1,6 +1,6 @@
 from src.nsclust.constants import UPDATES_SELECTED, AGGREGATION_DONE
-from src.protocol.states.event import Event
-from src.protocol.training.fedml.model_update_meta import ModelUpdateMeta
+from src.base.states.event import Event
+from src.base.training.fedml.model_update_meta import ModelUpdateMeta
 
 
 class SelectedUpdates(Event):
