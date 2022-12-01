@@ -4,8 +4,8 @@ from src.base.client.client_state_helpers import add_peer, get_round_id, update_
     is_peer_registered, get_node_id
 from src.base.states.event import Event
 from src.base.states.state import State
-from src.base.states.handler import Handler
-from src.base.states.transition import StateTransition
+from src.base.states.event_listener import EventListener
+from src.base.states.event_handler import EventHandler
 from src.base.client.messages.message import Message
 
 
@@ -18,8 +18,8 @@ class ConfirmRegistration(Event):
         )
 
 
-class ConfirmRegistrationReceiverTransition(StateTransition):
-    def transition(self, msg: Message, state: State, handler: Handler):
+class ConfirmRegistrationReceiverTransition(EventHandler):
+    def transition(self, msg: Message, state: State, handler: EventListener):
         for_peer = msg.data.registered_id
         if for_peer != get_node_id(state):
             return

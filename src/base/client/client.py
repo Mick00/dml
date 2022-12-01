@@ -9,12 +9,12 @@ from src.base.client.messages.serializer import Serializer
 from src.base.client.messages.message import Message
 from src.base.logging.log_handler import LogWarning
 from src.base.states.event import Event
-from src.base.states.handler import Handler
+from src.base.states.event_listener import EventListener
 
 
 class Client:
 
-    def __init__(self, id: str, message_broker: str, port: int, handler: Handler):
+    def __init__(self, id: str, message_broker: str, port: int, handler: EventListener):
         self.queue_name = None
         self.listening_connection = None
         self.listening_channel = None

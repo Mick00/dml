@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock, patch
 
-from src.base.states.reducers import StartHandler, StopHandler
+from src.base.states.handlers import StartHandler, StopHandler
 from src.base.states.state import State
 from src.base.states.constants import HANDLER_MODULE
 

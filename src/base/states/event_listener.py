@@ -4,28 +4,28 @@ import signal
 from src.base.states.constants import HANDLER_MODULE, HANDLER_STOPPED, HANDLER_STOP
 from src.base.states.state import State
 from src.base.states.event import Event
-from src.base.states.transition import StateTransition
+from src.base.states.event_handler import EventHandler
 
 
-class Handler:
+class EventListener:
 
     def __init__(self):
-        self.reducers = {}
+        self.handlers = {}
         self.state = State()
         self.event_queue = Queue()
         signal.signal(signal.SIGINT, self.exit_graceful)
         signal.signal(signal.SIGTERM, self.exit_graceful)
 
-    def register_reducer(self, message_type, reducer: StateTransition):
-        if message_type in self.reducers:
-            self.reducers[message_type].append(reducer)
-            self.reducers[message_type].sort(key=lambda reducer: reducer.priority)
+    def register_handler(self, message_type, reducer: EventHandler):
+        if message_type in self.handlers:
+            self.handlers[message_type].append(reducer)
+            self.handlers[message_type].sort(key=lambda reducer: reducer.priority)
         else:
-            self.reducers[message_type] = [reducer]
+            self.handlers[message_type] = [reducer]
 
-    def get_reducers(self, event_type: str):
-        if event_type in self.reducers:
-            return self.reducers[event_type]
+    def get_handlers(self, event_type: str):
+        if event_type in self.handlers:
+            return self.handlers[event_type]
         else:
             return []
 
@@ -33,7 +33,7 @@ class Handler:
         self.event_queue.put(message)
 
     def handle_event(self, message: Event):
-        reducers = self.get_reducers(message.type)
+        reducers = self.get_handlers(message.type)
         for reducer in reducers:
             reducer.transition(message, self.state, self)
 
@@ -44,7 +44,6 @@ class Handler:
         self.handle_event(Event(HANDLER_STOPPED))
 
     def exit_graceful(self, signum, frame):
-        print("Graceful exit")
         self.stop()
 
     def stop(self):

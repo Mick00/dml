@@ -43,7 +43,7 @@ def apply_target_bounds(state: State) -> bool:
 
 def get_int_use_rank(state, field_name) -> int:
     value = get_config(state).get(field_name)
-    if value.isnumeric():
+    if value.isnumeric() or value[1:].isnumeric():
         return int(value)
     values = json.loads(value)
     return values[get_node_rank(state) % len(values)]

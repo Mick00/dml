@@ -7,14 +7,14 @@ from src.base.client.actions.send import Send
 from src.base.client.client_state_helpers import add_peer
 from src.base.client.constants import CLIENT_SEND
 from src.base.client.messages.message import Message
-from src.base.states.handler import Handler
+from src.base.states.event_listener import EventListener
 from src.base.states.state import State
 
 
 class RegisterTest(unittest.TestCase):
     def test_send_register(self):
         transition = RegisterSenderTransition(0)
-        handler = Handler()
+        handler = EventListener()
         transition.transition(None, None, handler)
         event = handler.event_queue.get()
         self.assertEqual(event.type, CLIENT_SEND)
@@ -25,7 +25,7 @@ class RegisterTest(unittest.TestCase):
         peer_name = "test_id"
         msg = Message(peer_name, REGISTER_MESSAGE, -1)
         state = State()
-        handler = Handler()
+        handler = EventListener()
         transition.transition(msg, state, handler)
         send_confirmation = handler.event_queue.get()
         self.assertEqual(send_confirmation.type, CLIENT_SEND)

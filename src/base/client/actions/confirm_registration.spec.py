@@ -6,7 +6,7 @@ from src.base.client.actions.constants import NEW_PEER, CONFIRM_REGISTRATION_MES
 from src.base.client.actions.new_peer import NewPeer
 from src.base.client.client_state_helpers import init_client, add_peer, is_peer_registered
 from src.base.client.messages.message import wrap_event
-from src.base.states.handler import Handler
+from src.base.states.event_listener import EventListener
 from src.base.states.state import State
 
 
@@ -46,7 +46,7 @@ class ConfirmRegistrationTest(unittest.TestCase):
         confirm_registration = ConfirmRegistration(self.my_id)
         sender_id = "sender_id"
         message = wrap_event(sender_id, -1, confirm_registration)
-        handler = Handler()
+        handler = EventListener()
         transition = ConfirmRegistrationReceiverTransition(0)
         transition.transition(message, self.state, handler)
         self.assertTrue(is_peer_registered(self.state, sender_id))

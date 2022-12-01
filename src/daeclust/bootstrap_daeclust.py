@@ -8,8 +8,8 @@ from src.base.client.reducers import register_client_module
 from src.base.config.cli_config import get_arg_parse
 from src.base.config.config import register_config_module, UpdateConfig
 from src.base.states.event import Event
-from src.base.states.handler import Handler
-from src.base.states.reducers import HANDLER_START, register_handler_module
+from src.base.states.event_listener import EventListener
+from src.base.states.handlers import HANDLER_START, register_handler_module
 from src.base.training.register import register_training_module
 
 parser = get_arg_parse()
@@ -17,7 +17,7 @@ parser = get_arg_parse()
 def bootstrap_daeclust():
     args = parser.parse_args()
     load_dotenv()
-    handler = Handler()
+    handler = EventListener()
     register_config_module(handler)
     register_handler_module(handler)
     if args.interactive:

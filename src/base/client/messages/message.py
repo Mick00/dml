@@ -1,4 +1,4 @@
-from src.base.states.handler import Event
+from src.base.states.event_listener import Event
 
 
 def wrap_event(from_id: str, round_id: int, event: Event):

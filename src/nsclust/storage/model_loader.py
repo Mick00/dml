@@ -5,13 +5,13 @@ from src.nsclust.storage.round import Round
 from src.base.config.config_state_helper import get_output_path
 from src.base.states.event import Event
 from src.base.states.state import State
-from src.base.states.transition import StateTransition, Handler
+from src.base.states.event_handler import EventHandler, Handler
 from src.base.training.models.experiment import Experiment
 from src.base.training.constants import TRAINING_MODULE
 
 
 
-class InitModelLoader(StateTransition):
+class InitModelLoader(EventHandler):
     def transition(self, event: Event, state: State, handler: Handler):
         model_loader = ModelLoader(get_output_path(state))
         state.get_module_state(TRAINING_MODULE).update({

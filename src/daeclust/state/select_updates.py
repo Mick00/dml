@@ -6,16 +6,16 @@ from src.nsclust.nsclust_helpers import get_current_cluster
 from src.daeclust.state.events import StartUpdateSelection
 from src.base.client.actions.send import Send
 from src.base.client.client_state_helpers import get_node_id
-from src.base.states.handler import Handler
+from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.transition import StateTransition
+from src.base.states.event_handler import EventHandler
 from src.base.training.models.experiment import load_model
 from src.base.training.models.operations import weight_divergence
 
 
-class WDUpdateSelector(StateTransition):
+class WDUpdateSelector(EventHandler):
 
-    def transition(self, event: StartUpdateSelection, state: State, handler: Handler):
+    def transition(self, event: StartUpdateSelection, state: State, handler: EventListener):
         my_id = get_node_id(state)
         current_cluster = get_current_cluster(state)
         update_pool = get_strategy(state)\

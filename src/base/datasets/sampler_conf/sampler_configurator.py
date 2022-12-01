@@ -8,10 +8,10 @@ from src.base.datasets.sampling_rules.partition import partition_subset
 from src.base.datasets.sampling_rules.target import target_subset
 from src.base.states.event import Event
 from src.base.states.state import State
-from src.base.states.transition import StateTransition, Handler
+from src.base.states.event_handler import EventHandler, Handler
 
 
-class ConfigureSampler(StateTransition):
+class ConfigureSampler(EventHandler):
     def transition(self, event: Event, state: State, handler: Handler):
         data_loader = get_data_loader(state)
         rules = []

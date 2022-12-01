@@ -8,7 +8,7 @@ class Handler:
     pass
 
 
-class StateTransition(ABC):
+class EventHandler(ABC):
     def __init__(self, priority):
         self.priority = priority
 

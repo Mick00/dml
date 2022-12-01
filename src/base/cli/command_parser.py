@@ -1,8 +1,8 @@
-from ..states.handler import Handler
+from ..states.event_listener import EventListener
 from ..states.state import State
 
 
-def cmd_parser(promp: str, state: State, handler: Handler):
+def cmd_parser(promp: str, state: State, handler: EventListener):
     args = promp.split()
     if len(args) == 0:
         return

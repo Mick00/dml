@@ -1,7 +1,7 @@
 from src.base.logging.logging_helpers import get_logger
-from src.base.states.handler import Handler
+from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.transition import StateTransition
+from src.base.states.event_handler import EventHandler
 from src.base.training.events import TrainModel, ModelTrained
 from src.base.training.models.experiment import Experiment
 
@@ -18,13 +18,13 @@ def exp_to_log_dict(exp: Experiment) -> dict:
         }
 
 
-class LogStartTraining(StateTransition):
-    def transition(self, event: TrainModel, state: State, handler: Handler):
+class LogStartTraining(EventHandler):
+    def transition(self, event: TrainModel, state: State, handler: EventListener):
         exp = event.exp
         get_logger(state).info(event.type, extra=exp_to_log_dict(exp))
 
 
-class LogCompletedTraining(StateTransition):
-    def transition(self, event: ModelTrained, state: State, handler: Handler):
+class LogCompletedTraining(EventHandler):
+    def transition(self, event: ModelTrained, state: State, handler: EventListener):
         exp = event.exp
         get_logger(state).info(event.type, extra=exp_to_log_dict(exp))

@@ -1,4 +1,3 @@
-import json
 import unittest
 from unittest.mock import Mock
 
@@ -21,6 +20,11 @@ class FilterBuilderTest(unittest.TestCase):
         state = self.mocked_state(9, '1')
         value = get_int_use_rank(state, "field")
         self.assertEqual(value, 1)
+
+    def test_get_int_use_rank_neg_umber(self):
+        state = self.mocked_state(9, '-1')
+        value = get_int_use_rank(state, "field")
+        self.assertEqual(value, -1)
 
 if __name__ == '__main__':
     unittest.main()

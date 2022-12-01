@@ -5,7 +5,7 @@ from src.base.datasets.loaders.emnist_loader import EmnistRegister
 from src.base.datasets.loaders.mnist_loader import MnistRegister
 from src.base.config.cli_config import get_arg_parse
 from src.base.states.constants import HANDLER_STARTED
-from src.base.states.handler import Handler
+from src.base.states.event_listener import EventListener
 
 
 parser = get_arg_parse()
@@ -20,8 +20,8 @@ parser.add_argument('--data_mean', default="-1")
 parser.add_argument('--data_std', default="-1")
 
 
-def register_data_module(handler: Handler):
-    handler.register_reducer(HANDLER_STARTED, InitDataLoader(80))
-    handler.register_reducer(DATASET_PREPARE, DatasetPrepare(100))
-    handler.register_reducer(DATA_REGISTER_HOOK, MnistRegister(100))
-    handler.register_reducer(DATA_REGISTER_HOOK, EmnistRegister(100))
+def register_data_module(handler: EventListener):
+    handler.register_handler(HANDLER_STARTED, InitDataLoader(80))
+    handler.register_handler(DATASET_PREPARE, DatasetPrepare(100))
+    handler.register_handler(DATA_REGISTER_HOOK, MnistRegister(100))
+    handler.register_handler(DATA_REGISTER_HOOK, EmnistRegister(100))

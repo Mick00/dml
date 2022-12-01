@@ -6,9 +6,9 @@ from src.nsclust.nsclust_helpers import get_model_loader, CURRENT_CLUSTER_KEY, g
 from src.nsclust.storage.model_loader import ModelLoader
 from src.base.client.client_state_helpers import get_node_id
 from src.base.states.event import Event
-from src.base.states.handler import Handler
+from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.transition import StateTransition
+from src.base.states.event_handler import EventHandler
 from src.base.training.constants import TRAINING_MODULE
 from src.base.training.events import TrainModel
 from src.base.training.fedml.fedml_state_helper import get_update_queue
@@ -41,14 +41,14 @@ def run_tests(
         clusters: [str],
         model_loader: ModelLoader,
         training_client: TrainingClient,
-        handler: Handler
+        handler: EventListener
 ):
     test_model(exp_name, round_id, clusters, model_loader, training_client)
     handler.queue_event(CusterSelectionTestCompleted(round_id))
 
 
-class StartClusterSelectionTests(StateTransition):
-    def transition(self, event: SelectCluster, state: State, handler: Handler):
+class StartClusterSelectionTests(EventHandler):
+    def transition(self, event: SelectCluster, state: State, handler: EventListener):
         updates_queue = get_update_queue(state)
         active_clusters = updates_queue.get_unique_clusters(event.round_id - 1)
         model_loader = get_model_loader(state)
@@ -63,8 +63,8 @@ class StartClusterSelectionTests(StateTransition):
         })
 
 
-class SelectBestCluster(StateTransition):
-    def transition(self, event: CusterSelectionTestCompleted, state: State, handler: Handler):
+class SelectBestCluster(EventHandler):
+    def transition(self, event: CusterSelectionTestCompleted, state: State, handler: EventListener):
         exp_tracking = get_experiment_tracking(state)
         my_id = get_node_id(state)
         runs = exp_tracking.search(

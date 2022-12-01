@@ -12,23 +12,23 @@ from src.daeclust.state.select_cluster import StartClusterSelectionTests, Select
 from src.daeclust.state.start_training import StartTrainingPhase
 from src.base.client.constants import CLIENT_STARTED
 from src.base.states.constants import HANDLER_STARTED
-from src.base.states.handler import Handler
+from src.base.states.event_listener import EventListener
 from src.base.training.constants import ROUND_START, MODEL_TRAINED, NEXT_ROUND
 from src.base.training.fedml.constants import TRAINING_UPDATE_SHARE
 from src.base.training.fedml.share_update import ShareUpdate
 
 
-def register_daeclust_module(handler: Handler):
-    handler.register_reducer(HANDLER_STARTED, InitTracking(70))
-    handler.register_reducer(CLIENT_STARTED, InitStrategy(71))
-    handler.register_reducer(NEXT_ROUND, TriggerDatasetPrepare(100))
-    handler.register_reducer(ROUND_START, StartTrainingPhase(100))
-    handler.register_reducer(ROUND_START, InitStrategyForRound(90))
-    handler.register_reducer(CLUSTER_SELECTION, StartClusterSelectionTests(100))
-    handler.register_reducer(CLUSTER_TEST_COMPLETED, SelectBestCluster(100))
-    handler.register_reducer(MODEL_TRAINED, ShareUpdate(200))
-    handler.register_reducer(TRAINING_UPDATE_SHARE, UpdateHandler(100))
-    handler.register_reducer(AGGREGATION_UPDATE_POOLED, TriggerUpdateSelection(100))
-    handler.register_reducer(AGGREGATION_UPDATE_SELECTION_START, WDUpdateSelector(100))
-    handler.register_reducer(AGGREGATION_UPDATE_SELECTION_DONE, SelectedUpdatesHandler(100))
-    handler.register_reducer(AGGREGATION_UPDATE_SELECTION_DONE, TriggerNextRound(110))
+def register_daeclust_module(handler: EventListener):
+    handler.register_handler(HANDLER_STARTED, InitTracking(70))
+    handler.register_handler(CLIENT_STARTED, InitStrategy(71))
+    handler.register_handler(NEXT_ROUND, TriggerDatasetPrepare(100))
+    handler.register_handler(ROUND_START, StartTrainingPhase(100))
+    handler.register_handler(ROUND_START, InitStrategyForRound(90))
+    handler.register_handler(CLUSTER_SELECTION, StartClusterSelectionTests(100))
+    handler.register_handler(CLUSTER_TEST_COMPLETED, SelectBestCluster(100))
+    handler.register_handler(MODEL_TRAINED, ShareUpdate(200))
+    handler.register_handler(TRAINING_UPDATE_SHARE, UpdateHandler(100))
+    handler.register_handler(AGGREGATION_UPDATE_POOLED, TriggerUpdateSelection(100))
+    handler.register_handler(AGGREGATION_UPDATE_SELECTION_START, WDUpdateSelector(100))
+    handler.register_handler(AGGREGATION_UPDATE_SELECTION_DONE, SelectedUpdatesHandler(100))
+    handler.register_handler(AGGREGATION_UPDATE_SELECTION_DONE, TriggerNextRound(110))

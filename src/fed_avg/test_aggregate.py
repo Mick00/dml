@@ -10,9 +10,9 @@ from src.base.logging.log_handler import LogInfo
 from src.base.logging.log_training import exp_to_log_dict
 from src.base.logging.logging_helpers import get_logger
 from src.base.states.event import Event
-from src.base.states.handler import Handler
+from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.transition import StateTransition
+from src.base.states.event_handler import EventHandler
 from src.base.training.constants import TRAINING_MODULE, EXPERIMENT_TEST, EXPERIMENT_TESTED
 from src.base.training.training_client import TrainingClient
 from src.base.training.training_state_helper import get_training_client
@@ -23,7 +23,7 @@ def run_tests(
         round_id: int,
         model_loader: ModelLoader,
         training_client: TrainingClient,
-        handler: Handler
+        handler: EventListener
 ):
     exp = model_loader.get_experiment(GLOBAL_CLUSTER_ID, round_id + 1, exp_name=exp_name)
     handler.queue_event(LogInfo(EXPERIMENT_TEST, extra=exp_to_log_dict(exp)))
@@ -32,8 +32,8 @@ def run_tests(
     handler.queue_event(AggregateModelTestDone(round_id))
 
 
-class TestAggregate(StateTransition):
-    def transition(self, event: AggregationCompleted, state: State, handler: Handler):
+class TestAggregate(EventHandler):
+    def transition(self, event: AggregationCompleted, state: State, handler: EventListener):
         get_logger(state).info("aggregation.test", extra={"round_id": event.round_id})
         model_loader = get_model_loader(state)
         training_client = get_training_client(state)

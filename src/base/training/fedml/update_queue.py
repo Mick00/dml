@@ -1,5 +1,5 @@
 from src.base.states.event import Event
-from src.base.states.handler import Handler
+from src.base.states.event_listener import EventListener
 from src.base.training.fedml.constants import TRAINING_UPDATE_QUEUED
 from src.base.training.fedml.model_update_meta import ModelUpdateMeta
 
@@ -13,7 +13,7 @@ class QueuedUpdate(Event):
 
 class UpdateQueue:
 
-    def __init__(self, handler: Handler):
+    def __init__(self, handler: EventListener):
         self.handler = handler
         self.queued_updates = {}
 

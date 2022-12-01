@@ -7,10 +7,10 @@ from src.base.logging.JsonFormatter import JsonFormatter
 from src.base.logging.logging_helpers import get_log_folder, DML_LOGGER, LOGGING_MODULE, LOGGER_KEY, verbose_level
 from src.base.states.event import Event
 from src.base.states.state import State
-from src.base.states.transition import StateTransition, Handler
+from src.base.states.event_handler import EventHandler, Handler
 
 
-class InitLogger(StateTransition):
+class InitLogger(EventHandler):
     def transition(self, event: Event, state: State, handler: Handler):
         logger = logging.getLogger(DML_LOGGER)
         basic_log_file, dml_log_file = self.get_log_paths(state)
