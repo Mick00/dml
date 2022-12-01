@@ -6,6 +6,12 @@ from src.base.states.state import State
 
 DATA_MODULE = "data"
 
+DATA_READY_KEY = "ready"
+
+
+def data_is_ready(state: State) -> bool:
+    return state.get_module_state(DATA_MODULE).get(DATA_READY_KEY, False)
+
 
 def get_data_path(state: State) -> str:
     return get_config(state).get('data_path')

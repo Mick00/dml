@@ -1,9 +1,7 @@
-import secrets
-
 from src.nsclust.nsclust_helpers import CURRENT_CLUSTER_KEY, get_model_loader
 
 from src.fed_avg.constant import GLOBAL_CLUSTER_ID
-from src.base.client.client_state_helpers import get_node_id, get_peers, get_node_rank
+from src.base.client.client_state_helpers import get_node_rank
 from src.base.config.config_state_helper import get_local_model_name, get_experience_name
 from src.base.states.event_listener import EventListener
 from src.base.states.state import State
