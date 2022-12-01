@@ -20,9 +20,6 @@ class ConfirmRegistration(Event):
 
 class ConfirmRegistrationReceiverTransition(EventHandlerSimple):
     def transition(self, msg: Message, state: State, handler: EventListener):
-        for_peer = msg.data.registered_id
-        if for_peer != get_node_id(state):
-            return
 
         peer_id = msg.from_id
         if is_peer_registered(state, peer_id):
