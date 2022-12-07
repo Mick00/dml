@@ -1,6 +1,6 @@
 from src.base.datasets.data_helpers import apply_balance_rule, apply_partitions_rule, data_n_partitions, \
     data_partition_index, apply_target_bounds, get_higher_bound, get_lower_bound, apply_normal_probability, \
-    get_distribution_std, get_distribution_mean
+    get_distribution_std, get_distribution_mean, get_n_samples
 from src.base.datasets.data_loader import get_data_loader
 from src.base.datasets.sampling_rules.balance import balanced_weight
 from src.base.datasets.sampling_rules.normal import normal_probability_weights
@@ -37,4 +37,5 @@ class ConfigureSampler(EventHandler):
             log_dict = log_dict | {"mean": mean, "std": std}
         data_loader.set_sampling_rules(rules)
         data_loader.set_sampler_tags(log_dict)
+        data_loader.set_n_samples(get_n_samples(state))
         return [self.log_info("sampler.config", log_dict)]

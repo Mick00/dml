@@ -12,11 +12,12 @@ from src.base.states.event_handler import Handler, EventHandlerSimple
 class MnistRegister(EventHandlerSimple):
     def transition(self, event: Event, state: State, handler: Handler):
         data_loader = get_data_loader(state)
-        data_path = get_data_path(state)
-        data_loader.register_loader("mnist", lambda state: load_mnist(data_path))
+        data_loader.register_loader("mnist", lambda state: load_mnist(get_data_path(state)))
 
 
 def load_mnist(data_path: str):
+    if not data_path:
+        raise Exception("Data path is not set")
     train_dataset = MNIST(
         data_path,
         train=True,

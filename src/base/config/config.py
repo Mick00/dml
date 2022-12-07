@@ -6,7 +6,7 @@ from src.base.states.event_listener import EventListener
 
 
 def register_config_module(handler: EventListener):
-    handler.register_handler(UPDATE_CONFIG, UpdateConfigTransition(100))
+    handler.register_handler(UPDATE_CONFIG, UpdateConfigHandler(100))
 
 
 class UpdateConfig(Event):
@@ -14,6 +14,6 @@ class UpdateConfig(Event):
         super(UpdateConfig, self).__init__(UPDATE_CONFIG, config)
 
 
-class UpdateConfigTransition(EventHandlerSimple):
+class UpdateConfigHandler(EventHandlerSimple):
     def transition(self, event: UpdateConfig, state: State, handler: EventListener):
         state.update_module(CONFIG_MODULE, event.data.__dict__)

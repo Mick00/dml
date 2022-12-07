@@ -9,24 +9,22 @@ from src.base.states.state import State
 from src.base.states.event_handler import EventHandlerSimple
 
 
-class EmnistRegister(EventHandlerSimple):
+class FmnistRegister(EventHandlerSimple):
     def transition(self, event: Event, state: State, handler: EventListener):
         data_loader = get_data_loader(state)
-        data_loader.register_loader("emnist", lambda state: load_emnist(get_data_path(state)))
+        data_loader.register_loader("fmnist", lambda state: load_fmnist(get_data_path(state)))
 
 
-def load_emnist(data_path: str):
+def load_fmnist(data_path: str):
     if not data_path:
-        raise Exception("Data path is not set")
-    return datasets.EMNIST(
+        raise Exception("data_path is not set")
+    return datasets.FashionMNIST(
         data_path,
-        split="bymerge",
         train=True,
         download=True,
         transform=ToTensor()
-    ), datasets.EMNIST(
+    ), datasets.FashionMNIST(
         data_path,
-        split="bymerge",
         train=False,
         download=True,
         transform=ToTensor()

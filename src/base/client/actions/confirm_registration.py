@@ -1,7 +1,7 @@
 from src.base.client.actions.constants import CONFIRM_REGISTRATION_MESSAGE
 from src.base.client.actions.new_peer import NewPeer
 from src.base.client.client_state_helpers import add_peer, get_round_id, update_round_id, \
-    is_peer_registered, get_node_id
+    is_peer_registered
 from src.base.states.event import Event
 from src.base.states.state import State
 from src.base.states.event_listener import EventListener

@@ -1,3 +1,5 @@
+from src.base.datasets.events import DATASET_PREPARE
+from src.base.datasets.sampler_conf.sampler_configurator import ConfigureSampler
 from src.daeclust.constants import AGGREGATION_UPDATE_POOLED, AGGREGATION_UPDATE_SELECTION_START, AGGREGATION_UPDATE_SELECTION_DONE
 from src.daeclust.state.handle_new_updates import UpdateHandler
 from src.daeclust.state.handle_selected_updates import SelectedUpdatesHandler
@@ -16,14 +18,17 @@ from src.base.states.event_listener import EventListener
 from src.base.training.constants import ROUND_START, MODEL_TRAINED, NEXT_ROUND
 from src.base.training.fedml.constants import TRAINING_UPDATE_SHARE
 from src.base.training.fedml.share_update import ShareUpdate
+from src.nsclust.storage.init_model_storage import InitModelLoader
 
 
 def register_daeclust_module(handler: EventListener):
+    handler.register_handler(CLIENT_STARTED, InitModelLoader(30))
     handler.register_handler(HANDLER_STARTED, InitTracking(70))
+    handler.register_handler(DATASET_PREPARE, ConfigureSampler(50))
     handler.register_handler(CLIENT_STARTED, InitStrategy(71))
     handler.register_handler(NEXT_ROUND, TriggerDatasetPrepare(100))
-    handler.register_handler(ROUND_START, StartTrainingPhase(100))
     handler.register_handler(ROUND_START, InitStrategyForRound(90))
+    handler.register_handler(ROUND_START, StartTrainingPhase(100))
     handler.register_handler(CLUSTER_SELECTION, StartClusterSelectionTests(100))
     handler.register_handler(CLUSTER_TEST_COMPLETED, SelectBestCluster(100))
     handler.register_handler(MODEL_TRAINED, ShareUpdate(200))

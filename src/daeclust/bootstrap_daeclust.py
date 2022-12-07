@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 
+from src.base.logging.register import register_logging_module
 from src.daeclust.register import register_daeclust_module
 from src.base.datasets.register import register_data_module
 from src.base.cli.cli import register_cli_module
@@ -18,6 +19,7 @@ def bootstrap_daeclust():
     args = parser.parse_args()
     load_dotenv()
     handler = EventListener()
+    register_logging_module(handler)
     register_config_module(handler)
     register_handler_module(handler)
     if args.interactive:

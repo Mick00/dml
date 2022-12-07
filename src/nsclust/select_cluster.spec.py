@@ -4,7 +4,7 @@ from unittest.mock import Mock
 from src.nsclust.nsclust_helpers import get_cluster_selection_exp_name
 from src.nsclust.select_cluster import SelectBestCluster, CusterSelectionTestCompleted
 from src.base.client.client_state_helpers import init_client
-from src.base.config.config import UpdateConfig, UpdateConfigTransition
+from src.base.config.config import UpdateConfig, UpdateConfigHandler
 from src.base.states.event import Event
 from src.base.states.state import State
 from src.base.training.events import InitExperiment
@@ -20,7 +20,7 @@ class ModelLoaderTest(unittest.TestCase):
         client = Mock()
         client.id = "0bca02f8ff33849c5954ad08162ccbf1"
         init_client(state, client)
-        update_config = UpdateConfigTransition(0)
+        update_config = UpdateConfigHandler(0)
         update_config.transition(UpdateConfig( {
             "tracking_uri": "http://localhost:5000",
             "experiment_name": "declust"

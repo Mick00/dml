@@ -23,6 +23,10 @@ def get_output_path(state: State) -> str:
     return get_config(state).get('training_out')
 
 
+def gpu_enabled(state: State) -> bool:
+    return get_config(state).get('enable_gpu', False)
+
+
 def get_tracking_uri(state: State) -> str:
     return get_config(state).get('tracking_uri')
 

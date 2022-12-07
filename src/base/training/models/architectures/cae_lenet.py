@@ -1,5 +1,4 @@
 import torch
-from torch import nn
 from torch.nn import functional as F
 import pytorch_lightning as pl
 
@@ -19,7 +18,7 @@ class CaeLeNet(pl.LightningModule):
             },
             {
                 "in_channels": 6,
-                "out_channels": 16,
+                "out_channels": 12,
                 "padding": 0,
                 "kernel_size": 5,
                 "scale_factor": 1 / 2

@@ -31,11 +31,11 @@ def get_max_round(state: State) -> int:
 
 
 def get_training_profiler(state: State) -> int:
-    return get_config(state).get('training_profiler')
+    return get_config(state).get('training_profiler', None)
 
 
 def get_training_n_devices(state: State) -> int:
-    return get_config(state).get('training_n_dev')
+    return get_config(state).get('training_n_dev', 0)
 
 
 def get_n_epochs(state: State) -> int:

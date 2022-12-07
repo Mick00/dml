@@ -1,7 +1,6 @@
 from dotenv import load_dotenv
 
 from src.base.datasets.register import register_data_module
-from src.fed_avg.register import register_fed_avg_module
 from src.base.cli.cli import register_cli_module
 from src.base.cli.constant import CLI_START
 from src.base.client.reducers import register_client_module
@@ -12,28 +11,29 @@ from src.base.states.event import Event
 from src.base.states.event_listener import EventListener
 from src.base.states.handlers import HANDLER_START, register_handler_module
 from src.base.training.register import register_training_module
+from src.nsclust.register import register_nsclust_module
 
 parser = get_arg_parse()
 
 
-def bootstrap_fed_avg():
+def bootstrap_nsclust():
     args = parser.parse_args()
     load_dotenv()
-    event_listener = EventListener()
-    register_logging_module(event_listener)
-    register_config_module(event_listener)
-    register_handler_module(event_listener)
+    handler = EventListener()
+    register_logging_module(handler)
+    register_config_module(handler)
+    register_handler_module(handler)
     if args.interactive:
-        register_cli_module(event_listener)
-    register_data_module(event_listener)
-    register_client_module(event_listener)
-    register_training_module(event_listener)
-    register_fed_avg_module(event_listener)
-    event_listener.handle_event(UpdateConfig(args.__dict__))
-    event_listener.handle_event(Event(HANDLER_START))
+        register_cli_module(handler)
+    register_data_module(handler)
+    register_client_module(handler)
+    register_training_module(handler)
+    register_nsclust_module(handler)
+    handler.handle_event(UpdateConfig(args.__dict__))
+    handler.handle_event(Event(HANDLER_START))
     if args.interactive:
-        event_listener.handle_event(Event(CLI_START))
+        handler.handle_event(Event(CLI_START))
 
 
 if __name__ == '__main__':
-    bootstrap_fed_avg()
+    bootstrap_nsclust()

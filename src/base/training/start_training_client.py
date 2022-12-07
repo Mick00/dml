@@ -1,7 +1,7 @@
 from src.base.datasets.data_loader import get_data_loader
 from src.base.client.client_state_helpers import get_node_id, STARTED_KEY
 from src.base.config.config_state_helper import get_output_path, get_tracking_uri, \
-    get_experience_name
+    get_experience_name, gpu_enabled
 from src.base.states.event import Event
 from src.base.states.event_listener import EventListener
 from src.base.states.state import State
@@ -18,7 +18,7 @@ class StartTrainingClient(EventHandlerSimple):
                 get_node_id(state),
                 get_data_loader(state),
                 output_dir=get_output_path(state),
-                enable_gpu=False,
+                enable_gpu=gpu_enabled(state),
                 tracking_uri=get_tracking_uri(state),
                 exp_name=get_experience_name(state),
                 profiler=get_training_profiler(state),

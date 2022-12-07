@@ -1,0 +1,57 @@
+version: "3.9"
+services:
+  trainer_0:
+    build:
+      dockerfile: ./dml.Dockerfile
+      context: .
+    deploy:
+      replicas: ${N_TRAINERS_0}
+      resources:
+        limits:
+          cpus: '2'
+    environment:
+      - "BOOTSTRAP_SCRIPT=${BOOTSTRAP_SCRIPT}"
+      - "BROKER_HOSTNAME=broker"
+      - "BROKER_PORT=5672"
+      - "DATASET=${DATASET_0}"
+      - "TRAINER_THRESHOLD=${TOTAL_TRAINERS}"
+      - "MODEL=${MODEL_NAME}"
+      - "TRACKING_URI=http://tracking:5000"
+      - "EXPERIMENT_NAME=${EXPERIMENT_NAME}"
+      - "MAX_ROUND=${MAX_ROUND}"
+      - "EXTRA_ARGS=--data_n_partitions 1 --data_balance True --data_mean [0,3,6] --data_std 2"
+    volumes:
+      - "./data:/usr/src/app/data"
+      - "./storage/models:/usr/src/app/out"
+      - "./storage/logs:/usr/src/app/logs"
+    depends_on:
+      - broker
+      - tracking
+  trainer_1:
+    build:
+      dockerfile: ./dml.Dockerfile
+      context: .
+    deploy:
+      replicas: ${N_TRAINERS_1}
+      resources:
+        limits:
+          cpus: '2'
+    environment:
+      - "BOOTSTRAP_SCRIPT=${BOOTSTRAP_SCRIPT}"
+      - "BROKER_HOSTNAME=broker"
+      - "BROKER_PORT=5672"
+      - "DATASET=${DATASET_1}"
+      - "TRAINER_THRESHOLD=${TOTAL_TRAINERS}"
+      - "MODEL=${MODEL_NAME}"
+      - "TRACKING_URI=http://tracking:5000"
+      - "EXPERIMENT_NAME=${EXPERIMENT_NAME}"
+      - "MAX_ROUND=${MAX_ROUND}"
+      - "EXTRA_ARGS=--data_n_partitions 1 --data_balance True --data_mean [0,3,6] --data_std 2"
+    volumes:
+      - "./data:/usr/src/app/data"
+      - "./storage/models:/usr/src/app/out"
+      - "./storage/logs:/usr/src/app/logs"
+    depends_on:
+      - broker
+      - tracking
+

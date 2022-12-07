@@ -40,6 +40,7 @@ class TrainingClient:
 
     def get_logger(self, model: Experiment, test=False, extra_tags={}):
         tags = self.trainer_tags | {
+                     "model_name": model.model_name,
                      "cluster_id": model.cluster_id,
                      "round_id": str(model.round_id),
                      "trainer_id": self.trainer_id,
@@ -54,21 +55,19 @@ class TrainingClient:
         )
         return mlf_logger
 
-    def get_trainer(self, model: Experiment, test=False, extra_tags={}):
+    def get_trainer(self, model: Experiment, test=False, extra_tags={}, max_epochs=0):
         # to early stop callbacks=[EarlyStopping(monitor="validation_loss", mode="max")],
         if self.enable_gpu:
             return pl.Trainer(
                 default_root_dir=self.get_output_dir(),
                 accelerator="gpu",
-                devices=self.devices,
                 auto_select_gpus=True,
                 auto_scale_batch_size="binsearch",
                 logger=self.get_logger(model, test, extra_tags),
                 fast_dev_run=self.fast_dev_run,
                 profiler=self.profiler,
-                num_processes=self.devices,
-                max_epochs=self.epochs,
-                enable_progress_bar=False
+                max_epochs=max_epochs if max_epochs > 0 else self.epochs,
+                enable_progress_bar=True
             )
         return pl.Trainer(
             default_root_dir=self.get_output_dir(),
@@ -85,9 +84,9 @@ class TrainingClient:
     def get_output_dir(self):
         return os.path.join(self.output_dir, "checkpoints")
 
-    def train_model(self, exp: Experiment) -> Experiment:
+    def train_model(self, exp: Experiment, max_epochs=0) -> Experiment:
         train_loader, val_loader, tags = self.get_train_dataloader()
-        trainer = self.get_trainer(exp, extra_tags=tags)
+        trainer = self.get_trainer(exp, extra_tags=tags, max_epochs=max_epochs)
         trainer.fit(exp.model, train_loader, val_loader)
         exp.experiment_id = exp.model.logger.experiment_id
         exp.run_id = exp.model.logger.run_id

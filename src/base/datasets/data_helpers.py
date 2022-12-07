@@ -78,3 +78,6 @@ def get_distribution_std(state: State) -> int:
 def get_data_module(state: State) -> dict:
     return state.get_module_state(DATA_MODULE)
 
+
+def get_n_samples(state: State) -> bool:
+    return get_config(state).get('n_samples')
