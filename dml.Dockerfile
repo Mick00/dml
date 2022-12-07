@@ -13,6 +13,8 @@ ENV MODEL=""
 ENV TRACKING_URI="http://tracking:5000"
 ENV EXPERIMENT_NAME="fed_avg"
 ENV MAX_ROUND="-1"
+ENV N_DEVICES="1"
+ENV N_EPOCHS="1"
 ENV EXTRA_ARGS=""
 
 WORKDIR /usr/src/app
@@ -42,4 +44,6 @@ CMD python $BOOTSTRAP_SCRIPT \
     --training_out /usr/src/app/out \
     --tracking_uri $TRACKING_URI \
     --experiment_name $EXPERIMENT_NAME \
-    --max_round $MAX_ROUND $EXTRA_ARGS
+    --max_round $MAX_ROUND \
+    --training_n_dev $N_DEVICES \
+    --n_epochs $N_EPOCHS $EXTRA_ARGS
