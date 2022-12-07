@@ -52,7 +52,10 @@ def get_int_use_rank(state, field_name) -> int:
     if value.isnumeric() or value[1:].isnumeric():
         return int(value)
     values = json.loads(value)
-    return values[get_node_rank(state) % len(values)]
+    value = values[get_node_rank(state) % len(values)]
+    if not isinstance(value, int):
+        value = int(value)
+    return value
 
 
 def get_lower_bound(state: State) -> int:

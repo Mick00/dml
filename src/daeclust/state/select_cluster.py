@@ -8,7 +8,7 @@ from src.base.client.client_state_helpers import get_node_id
 from src.base.states.event import Event
 from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.event_handler import EventHandlerSimple
+from src.base.states.event_handler import EventHandlerSimple, EventHandler
 from src.base.training.constants import TRAINING_MODULE
 from src.base.training.events import TrainModel
 from src.base.training.models.experiment import Experiment
@@ -47,8 +47,8 @@ def run_tests(
     handler.queue_event(CusterSelectionTestCompleted(round_id))
 
 
-class StartClusterSelectionTests(EventHandlerSimple):
-    def transition(self, event: SelectCluster, state: State, handler: EventListener):
+class StartClusterSelectionTests(EventHandler):
+    def _transition(self, event: SelectCluster, state: State, handler: EventListener):
         strategy = get_strategy(state).for_round(event.round_id - 1)
         training_client = get_training_client(state)
         exp_name = get_cluster_selection_exp_name(state)
@@ -59,10 +59,13 @@ class StartClusterSelectionTests(EventHandlerSimple):
         state.update_module(TRAINING_MODULE, {
             "test-clusters": thread
         })
+        return [
+            self.log_info("cluster_selection.started", {"round_id": event.round_id, "clusters": list(strategy.clusters.get_ids())})
+        ]
 
 
-class SelectBestCluster(EventHandlerSimple):
-    def transition(self, event: CusterSelectionTestCompleted, state: State, handler: EventListener):
+class SelectBestCluster(EventHandler):
+    def _transition(self, event: CusterSelectionTestCompleted, state: State, handler: EventListener):
         exp_tracking = get_experiment_tracking(state)
         my_id = get_node_id(state)
         runs = exp_tracking.search(
@@ -84,3 +87,6 @@ class SelectBestCluster(EventHandlerSimple):
         model = cluster.get_model()
         exp = Experiment(get_cluster_training_exp_name(state), cluster_id, event.round_id, cluster.model_name, model)
         handler.queue_event(TrainModel(exp))
+        return [
+            self.log_info("cluster_selection.done", {"round_id": event.round_id, "best_cluster": cluster_id})
+        ]

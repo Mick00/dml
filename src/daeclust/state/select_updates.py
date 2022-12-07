@@ -8,14 +8,14 @@ from src.base.client.actions.send import Send
 from src.base.client.client_state_helpers import get_node_id
 from src.base.states.event_listener import EventListener
 from src.base.states.state import State
-from src.base.states.event_handler import EventHandlerSimple
+from src.base.states.event_handler import EventHandler
 from src.base.training.models.experiment import load_model
 from src.base.training.models.operations import weight_divergence
 
 
-class WDUpdateSelector(EventHandlerSimple):
+class WDUpdateSelector(EventHandler):
 
-    def transition(self, event: StartUpdateSelection, state: State, handler: EventListener):
+    def _transition(self, event: StartUpdateSelection, state: State, handler: EventListener):
         my_id = get_node_id(state)
         current_cluster = get_current_cluster(state)
         update_pool = get_strategy(state)\
@@ -31,6 +31,10 @@ class WDUpdateSelector(EventHandlerSimple):
                 update.divergence = weight_divergence(my_update_model, loaded_update)
                 selected.append(update)
         selected.sort(key=lambda update: update.divergence)
+        log_all_wd = self.log_info("cluster_aggregation.weight_divergences", {
+            "round_id": event.round_id,
+            "weights": list(map(lambda exp: exp.divergence, selected))
+        })
         if len(selected) <= 2:
             selected_top = selected
         else:
@@ -39,6 +43,13 @@ class WDUpdateSelector(EventHandlerSimple):
         selected_events = TrainerSelectedUpdates(event.round_id, my_id, current_cluster, selected_trainers)
         handler.queue_event(selected_events)
         handler.queue_event(Send(selected_events))
+        return [
+            log_all_wd,
+            self.log_info("cluster_aggregation.weight_divergences.selected", {
+                "round_id": event.round_id,
+                "weights": list(map(lambda exp: exp.divergence, selected))
+            })
+        ]
 
 
 
