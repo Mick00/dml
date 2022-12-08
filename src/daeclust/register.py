@@ -1,3 +1,4 @@
+from src.base.config.cli_config import get_arg_parse
 from src.base.datasets.events import DATASET_PREPARE
 from src.base.datasets.sampler_conf.sampler_configurator import ConfigureSampler
 from src.daeclust.constants import AGGREGATION_UPDATE_POOLED, AGGREGATION_UPDATE_SELECTION_START, AGGREGATION_UPDATE_SELECTION_DONE
@@ -20,6 +21,8 @@ from src.base.training.fedml.constants import TRAINING_UPDATE_SHARE
 from src.base.training.fedml.share_update import ShareUpdate
 from src.nsclust.storage.init_model_storage import InitModelLoader
 
+argparse = get_arg_parse()
+argparse.add_argument('--divergence_tolerance', type=float, default=3)
 
 def register_daeclust_module(handler: EventListener):
     handler.register_handler(CLIENT_STARTED, InitModelLoader(30))

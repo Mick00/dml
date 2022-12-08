@@ -1,3 +1,4 @@
+from src.base.config.config_state_helper import get_config
 from src.daeclust.constants import DAECLUST_MODULE
 from src.daeclust.strategy import AggregationStrategy
 from src.base.states.state import State
@@ -12,3 +13,7 @@ def get_daeclust_state_module(state: State):
 
 def get_strategy(state: State) -> AggregationStrategy:
     return get_daeclust_state_module(state).get(STRATEGY_KEY)
+
+
+def get_div_tolerance(state: State) -> float:
+    return get_config(state).get("divergence_tolerance", 3.0)

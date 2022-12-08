@@ -1,6 +1,6 @@
-import math
+import numpy as np
 
-from src.daeclust.daecluste_helper import get_strategy
+from src.daeclust.daecluste_helper import get_strategy, get_div_tolerance
 from src.daeclust.state.events import TrainerSelectedUpdates
 from src.nsclust.nsclust_helpers import get_current_cluster
 from src.daeclust.state.events import StartUpdateSelection
@@ -28,17 +28,20 @@ class WDUpdateSelector(EventHandler):
         for update in update_pool:
             if update.from_id != my_id:
                 loaded_update = load_model(update)
-                update.divergence = weight_divergence(my_update_model, loaded_update)
+                update.divergence = weight_divergence(my_update_model, loaded_update).item()
                 selected.append(update)
         selected.sort(key=lambda update: update.divergence)
+        all_weights = list(map(lambda exp: exp.divergence, selected))
         log_all_wd = self.log_info("cluster_aggregation.weight_divergences", {
             "round_id": event.round_id,
-            "weights": list(map(lambda exp: exp.divergence, selected))
+            "weights": all_weights
         })
         if len(selected) <= 2:
             selected_top = selected
         else:
-            selected_top = selected[0: math.floor(len(selected) * 0.90)]
+            std_dev = np.array(all_weights).std()
+            div_tolerance = std_dev * get_div_tolerance(state)
+            selected_top = filter(lambda update: update.divergence <= div_tolerance, selected)
         selected_trainers = list(map(lambda updates: updates.from_id, selected_top))
         selected_events = TrainerSelectedUpdates(event.round_id, my_id, current_cluster, selected_trainers)
         handler.queue_event(selected_events)
