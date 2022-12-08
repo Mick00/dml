@@ -7,3 +7,4 @@ mlflow_data
 storage/*
 **/__pycache__/**
 logs
+**/*.csv

@@ -11,7 +11,7 @@ from src.daeclust.state.select_updates import WDUpdateSelector
 from src.base.datasets.trigger_dataset_prepare import TriggerDatasetPrepare
 from src.nsclust.constants import CLUSTER_SELECTION, CLUSTER_TEST_COMPLETED
 from src.nsclust.init_tracking import InitTracking
-from src.daeclust.state.select_cluster import StartClusterSelectionTests, SelectBestCluster
+from src.daeclust.state.select_cluster import StartClusterSelectionTests, SelectMinLossCluster
 from src.daeclust.state.start_training import StartTrainingPhase
 from src.base.client.constants import CLIENT_STARTED
 from src.base.states.constants import HANDLER_STARTED
@@ -33,7 +33,7 @@ def register_daeclust_module(handler: EventListener):
     handler.register_handler(ROUND_START, InitStrategyForRound(90))
     handler.register_handler(ROUND_START, StartTrainingPhase(100))
     handler.register_handler(CLUSTER_SELECTION, StartClusterSelectionTests(100))
-    handler.register_handler(CLUSTER_TEST_COMPLETED, SelectBestCluster(100))
+    handler.register_handler(CLUSTER_TEST_COMPLETED, SelectMinLossCluster(100))
     handler.register_handler(MODEL_TRAINED, ShareUpdate(200))
     handler.register_handler(TRAINING_UPDATE_SHARE, UpdateHandler(100))
     handler.register_handler(AGGREGATION_UPDATE_POOLED, TriggerUpdateSelection(100))

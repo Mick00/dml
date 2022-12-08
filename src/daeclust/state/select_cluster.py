@@ -1,3 +1,4 @@
+import math
 from threading import Thread
 
 from src.daeclust.clusters import ClustersRegistry
@@ -64,7 +65,11 @@ class StartClusterSelectionTests(EventHandler):
         ]
 
 
-class SelectBestCluster(EventHandler):
+def compute_score_quadratic_loss_popularity(test_metric: float, popularity: int):
+    return test_metric / math.sqrt(popularity)
+
+
+class SelectMinLossCluster(EventHandler):
     def _transition(self, event: CusterSelectionTestCompleted, state: State, handler: EventListener):
         exp_tracking = get_experiment_tracking(state)
         my_id = get_node_id(state)
@@ -74,10 +79,7 @@ class SelectBestCluster(EventHandler):
             test=True,
             round_id=event.round_id
         )
-        best_run = runs[0]
-        for run in runs[1:]:
-            if run.data.metrics.get('test_loss') < best_run.data.metrics.get('test_loss'):
-                best_run = run
+        best_run = self.select(state, runs, event.round_id)
         cluster_id = best_run.data.tags.get('cluster_id')
         state.update_module(TRAINING_MODULE, {
             CURRENT_CLUSTER_KEY: cluster_id
@@ -90,3 +92,21 @@ class SelectBestCluster(EventHandler):
         return [
             self.log_info("cluster_selection.done", {"round_id": event.round_id, "best_cluster": cluster_id})
         ]
+
+    def select(self, state: State, runs, round_id):
+        strategy = get_strategy(state)
+        cluster_popularity = strategy.for_round(round_id - 1).clusters.get_clusters_popularity()
+        best_run_score = self.compute_score(runs[0], cluster_popularity)
+        best_run = runs[0]
+        for run in runs[1:]:
+            run_score = self.compute_score(run, cluster_popularity)
+            if run_score < best_run_score:
+                best_run_score = run_score
+                best_run = run
+        return best_run
+
+    def compute_score(self, run, cluster_popularity):
+        return compute_score_quadratic_loss_popularity(
+            run.data.metrics.get('test_loss'),
+            cluster_popularity.get(run.data.tags.get("cluster_id"))
+        )

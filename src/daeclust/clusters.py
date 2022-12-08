@@ -1,5 +1,6 @@
 import os
 
+import numpy as np
 import pytorch_lightning as pl
 import torch
 from torch import nn
@@ -88,3 +89,11 @@ class ClustersRegistry:
 
     def set_trainer_cluster(self, trainer_id: str, cluster_id: str):
         self.trainer_cluster[trainer_id] = cluster_id
+
+    def get_clusters_popularity(self) -> dict:
+        selected_clusters = np.array(list(self.trainer_cluster.values()))
+        ar_unique, i = np.unique(selected_clusters, return_counts=True)
+        popularity = {}
+        for cluster_id, count in zip(ar_unique, i):
+            popularity[cluster_id] = count
+        return popularity
