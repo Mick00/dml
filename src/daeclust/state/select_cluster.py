@@ -100,7 +100,8 @@ class SelectMinLossCluster(EventHandler):
         cluster_popularity = strategy.for_round(round_id - 1).clusters.get_clusters_popularity()
         run_scores = list(map(lambda run: self.compute_score(run, cluster_popularity), runs))
         run_scores = np.array(run_scores)
-        selection_threshold = np.percentile(run_scores, 25)
+        n_clusters = len(cluster_popularity.keys())
+        selection_threshold = np.percentile(run_scores, math.sqrt(n_clusters)/n_clusters)
         selected = []
         best_score = float("inf")
         best_run = None

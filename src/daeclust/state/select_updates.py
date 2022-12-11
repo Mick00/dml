@@ -50,6 +50,7 @@ class WDUpdateSelector(EventHandler):
             log_all_wd,
             self.log_info("cluster_aggregation.weight_divergences.selected", {
                 "round_id": event.round_id,
+                "selected_trainers": selected_trainers,
                 "sum": list(map(lambda exp: exp.divergence, selected))
             })
         ]

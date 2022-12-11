@@ -20,7 +20,7 @@ def init_analysis(exp_name):
     if not os.path.exists(data.get("save_folder")):
         os.makedirs(data.get("save_folder"))
     data["client"] = MlflowClient(tracking_uri="http://antares.logti.etsmtl.ca:5000")
-    return load_runs(data["client"], data["exp_name"], 101)
+    return load_runs(data["client"], data["exp_name"], None)
 
 
 def get_exp_name():
