@@ -31,15 +31,15 @@ class WDUpdateSelector(EventHandler):
                 update.divergence = weight_divergence(my_update_model, loaded_update).item()
                 selected.append(update)
         selected.sort(key=lambda update: update.divergence)
-        all_weights = list(map(lambda exp: exp.divergence, selected))
+        all_divergences = list(map(lambda exp: exp.divergence, selected))
         log_all_wd = self.log_info("cluster_aggregation.weight_divergences", {
             "round_id": event.round_id,
-            "weights": all_weights
+            "sum": all_divergences
         })
         if len(selected) <= 2:
             selected_top = selected
         else:
-            std_dev = np.array(all_weights).std()
+            std_dev = np.array(all_divergences).std()
             div_tolerance = std_dev * get_div_tolerance(state)
             selected_top = filter(lambda update: update.divergence <= div_tolerance, selected)
         selected_trainers = list(map(lambda updates: updates.from_id, selected_top))
@@ -50,7 +50,7 @@ class WDUpdateSelector(EventHandler):
             log_all_wd,
             self.log_info("cluster_aggregation.weight_divergences.selected", {
                 "round_id": event.round_id,
-                "weights": list(map(lambda exp: exp.divergence, selected))
+                "sum": list(map(lambda exp: exp.divergence, selected))
             })
         ]
 

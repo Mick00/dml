@@ -1,4 +1,6 @@
 import hashlib
+
+from src.base.training.fedml.model_update_meta import ModelUpdateMeta
 from src.daeclust.clusters import ClustersRegistry, Cluster
 from src.daeclust.update_pool import UpdatePools
 
@@ -42,3 +44,6 @@ class AggregationStrategy:
         new_cluster = Cluster(cluster_id, model_name, round_id, self.save_path, updates_path)
         self.for_round(round_id).clusters.add(cluster_id, new_cluster)
         return cluster_id
+
+    def add_update(self, update_meta: ModelUpdateMeta):
+        self.for_round(update_meta.round_id).update_pools.add_update(update_meta)

@@ -35,6 +35,9 @@ class EventHandler(EventHandlerSimple):
     def log_info(self, msg, extra=None):
         return self.log(msg, logging.INFO, extra)
 
+    def log_warn(self, msg, extra=None):
+        return self.log(msg, logging.WARNING, extra)
+
     def log(self, msg, level, extra=None):
         return {
             "level": level,
@@ -44,7 +47,8 @@ class EventHandler(EventHandlerSimple):
 
     def submit_logs(self, logger: Logger, logs: [dict]):
         for log in logs:
-            logger.log(level=log.get("level", logging.INFO), msg=log.get("msg"), extra=log.get("extra", None))
+            if log is not None:
+                logger.log(level=log.get("level", logging.INFO), msg=log.get("msg"), extra=log.get("extra", None))
 
     @abstractmethod
     def _transition(self, event: Event, state: State, handler: Handler) -> [dict]:

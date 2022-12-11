@@ -17,7 +17,7 @@ class CaeLeNetLight(pl.LightningModule):
                 "scale_factor": 1 / 2
             },
             {
-                "in_channels": 6,
+                "in_channels": 3,
                 "out_channels": 9,
                 "padding": 0,
                 "kernel_size": 5,
