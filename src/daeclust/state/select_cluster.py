@@ -4,7 +4,7 @@ from threading import Thread
 import numpy as np
 
 from src.daeclust.clusters import ClustersRegistry
-from src.daeclust.daecluste_helper import get_strategy
+from src.daeclust.daecluste_helper import get_strategy, get_cluster_scoring, get_cluster_metric
 from src.daeclust.state.events import SelectedClusters
 from src.nsclust.constants import CLUSTER_SELECTION, CLUSTER_TEST_COMPLETED
 from src.nsclust.nsclust_helpers import CURRENT_CLUSTER_KEY, get_cluster_selection_exp_name, get_cluster_training_exp_name
@@ -69,10 +69,24 @@ class StartClusterSelectionTests(EventHandler):
 
 
 def compute_score_quadratic_loss_popularity(test_metric: float, popularity: int):
-    return test_metric / math.sqrt(popularity)
+    return (1 / test_metric) * math.sqrt(popularity)
 
 
-class SelectMinLossCluster(EventHandler):
+def compute_scores(round_id, state: State, runs):
+    scoring_method = get_cluster_scoring(state)
+    metric_field = get_cluster_metric(state)
+    run_scores = None
+    if scoring_method == "lossqpop":
+        strategy = get_strategy(state)
+        cluster_popularity = strategy.for_round(round_id - 1).clusters.get_clusters_popularity()
+        run_scores = list(map(lambda run: compute_score_quadratic_loss_popularity(
+            run.data.metrics.get(metric_field),
+            cluster_popularity.get(run.data.tags.get("cluster_id"))
+        ), runs))
+    return run_scores
+
+
+class SelectHighestScoreCluster(EventHandler):
     def _transition(self, event: CusterSelectionTestCompleted, state: State, handler: EventListener):
         exp_tracking = get_experiment_tracking(state)
         my_id = get_node_id(state)
@@ -96,26 +110,18 @@ class SelectMinLossCluster(EventHandler):
         ]
 
     def select(self, state: State, runs, round_id) -> (str, list[str]):
-        strategy = get_strategy(state)
-        cluster_popularity = strategy.for_round(round_id - 1).clusters.get_clusters_popularity()
-        run_scores = list(map(lambda run: self.compute_score(run, cluster_popularity), runs))
+        run_scores = compute_scores(round_id, state, runs)
         run_scores = np.array(run_scores)
-        n_clusters = len(cluster_popularity.keys())
-        selection_threshold = np.percentile(run_scores, math.sqrt(n_clusters)/n_clusters)
+        n_clusters = len(set(map(lambda run: run.data.tags.get('cluster_id'), runs)))
+        selection_threshold = np.percentile(run_scores, 100 * math.sqrt(n_clusters)/n_clusters, method='closest_observation')
         selected = []
-        best_score = float("inf")
+        best_score = 0
         best_run = None
         for run, score in zip(runs, run_scores):
-            if score <= selection_threshold:
+            if score >= selection_threshold:
                 selected.append(run)
-            if score < best_score:
+            if score > best_score:
                 best_score = score
                 best_run = run
         selected_ids = list(map(lambda run: run.data.tags.get('cluster_id'), selected))
         return best_run.data.tags.get('cluster_id'), selected_ids
-
-    def compute_score(self, run, cluster_popularity):
-        return compute_score_quadratic_loss_popularity(
-            run.data.metrics.get('test_loss'),
-            cluster_popularity.get(run.data.tags.get("cluster_id"))
-        )

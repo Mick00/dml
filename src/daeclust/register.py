@@ -13,7 +13,7 @@ from src.daeclust.state.select_updates import WDUpdateSelector
 from src.base.datasets.trigger_dataset_prepare import TriggerDatasetPrepare
 from src.nsclust.constants import CLUSTER_SELECTION, CLUSTER_TEST_COMPLETED
 from src.nsclust.init_tracking import InitTracking
-from src.daeclust.state.select_cluster import StartClusterSelectionTests, SelectMinLossCluster
+from src.daeclust.state.select_cluster import StartClusterSelectionTests, SelectHighestScoreCluster
 from src.daeclust.state.start_training import StartTrainingPhase
 from src.base.client.constants import CLIENT_STARTED
 from src.base.states.constants import HANDLER_STARTED
@@ -23,6 +23,8 @@ from src.nsclust.storage.init_model_storage import InitModelLoader
 
 argparse = get_arg_parse()
 argparse.add_argument('--divergence_tolerance', type=float, default=3)
+argparse.add_argument('--cluster_metric')
+argparse.add_argument('--cluster_scoring')
 
 def register_daeclust_module(handler: EventListener):
     handler.register_handler(CLIENT_STARTED, InitModelLoader(30))
@@ -33,7 +35,7 @@ def register_daeclust_module(handler: EventListener):
     handler.register_handler(ROUND_START, InitStrategyForRound(90))
     handler.register_handler(ROUND_START, StartTrainingPhase(100))
     handler.register_handler(CLUSTER_SELECTION, StartClusterSelectionTests(100))
-    handler.register_handler(CLUSTER_TEST_COMPLETED, SelectMinLossCluster(100))
+    handler.register_handler(CLUSTER_TEST_COMPLETED, SelectHighestScoreCluster(100))
     handler.register_handler(CLUSTER_SELECTED, SelectedClustersHandler(100))
     update_buffer = ModelTrainedBuffer(200)
     handler.register_handler(MODEL_TRAINED, update_buffer)

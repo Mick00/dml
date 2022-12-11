@@ -17,3 +17,11 @@ def get_strategy(state: State) -> AggregationStrategy:
 
 def get_div_tolerance(state: State) -> float:
     return get_config(state).get("divergence_tolerance", 3.0)
+
+
+def get_cluster_metric(state: State) -> str:
+    return get_config(state).get('cluster_metric')
+
+
+def get_cluster_scoring(state: State) -> str:
+    return get_config(state).get('cluster_scoring')

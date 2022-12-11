@@ -18,7 +18,12 @@ def get_data_path(state: State) -> str:
 
 
 def get_dataset(state: State) -> str:
-    return get_config(state).get('dataset')
+    value = get_config(state).get('dataset')
+    try:
+        dataset = json.loads(value)
+        return dataset[get_node_rank(state) % len(dataset)]
+    except ValueError:
+        return value
 
 
 def apply_balance_rule(state: State) -> bool:

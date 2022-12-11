@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock
 
-from src.base.datasets.data_helpers import get_int_use_rank
+from src.base.datasets.data_helpers import get_int_use_rank, get_dataset
 
 
 class FilterBuilderTest(unittest.TestCase):
@@ -25,6 +25,24 @@ class FilterBuilderTest(unittest.TestCase):
         state = self.mocked_state(9, '-1')
         value = get_int_use_rank(state, "field")
         self.assertEqual(value, -1)
+
+    def test_get_dataset_array(self):
+        state = Mock()
+        state.get_module_state.return_value = {"rank": 0, "dataset": '["mnist"]'}
+        dataset = get_dataset(state)
+        self.assertEqual(dataset, "mnist")
+
+    def test_get_dataset_array_wrap(self):
+        state = Mock()
+        state.get_module_state.return_value = {"rank": 3, "dataset": '["mnist", "emnist"]'}
+        dataset = get_dataset(state)
+        self.assertEqual(dataset, "emnist")
+
+    def test_get_dataset(self):
+        state = Mock()
+        state.get_module_state.return_value = {"rank": 0, "dataset": "mnist"}
+        dataset = get_dataset(state)
+        self.assertEqual(dataset, "mnist")
 
 if __name__ == '__main__':
     unittest.main()
