@@ -34,7 +34,8 @@ class WDUpdateSelector(EventHandler):
         all_divergences = list(map(lambda exp: exp.divergence, selected))
         log_all_wd = self.log_info("cluster_aggregation.weight_divergences", {
             "round_id": event.round_id,
-            "sum": all_divergences
+            "sum": all_divergences,
+            "trainers": list(map(lambda exp: exp.from_id, selected))
         })
         if len(selected) <= 2:
             selected_top = selected
