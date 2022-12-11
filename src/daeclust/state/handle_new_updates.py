@@ -14,6 +14,9 @@ class UpdateHandler(EventHandlerSimple):
         updates = event.data.updates
         round_id = updates[0].get("round_id")
         strat = get_strategy(state)
+        if not strat.ready_for_round(round_id):
+            handler.queue_event(event)
+            return
         for update in updates:
             update_meta = ModelUpdateMeta(
                 update.get("cluster_id"),

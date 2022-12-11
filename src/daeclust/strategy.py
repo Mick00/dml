@@ -29,6 +29,9 @@ class AggregationStrategy:
         self.rounds[round_id] = round
         return round
 
+    def ready_for_round(self, round_id) -> bool:
+        return round_id in self.rounds
+
     def for_round(self, round_id: int) -> RoundStrategy:
         return self.rounds.get(round_id)
 
