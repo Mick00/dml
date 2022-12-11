@@ -41,7 +41,8 @@ class WDUpdateSelector(EventHandler):
             selected_top = selected
         else:
             std_dev = np.array(all_divergences).std()
-            div_tolerance = std_dev * get_div_tolerance(state)
+            median = np.median(np.array(all_divergences))
+            div_tolerance = median + std_dev * get_div_tolerance(state)
             selected_top = filter(lambda update: update.divergence <= div_tolerance, selected)
         selected_trainers = list(map(lambda updates: updates.from_id, selected_top))
         selected_events = TrainerSelectedUpdates(event.round_id, my_id, current_cluster, selected_trainers)
