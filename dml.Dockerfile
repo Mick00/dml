@@ -26,6 +26,7 @@ RUN pip install mlflow==1.30.0 \
     torch \
     torchaudio \
     torchvision \
+    torchmetrics==0.10.2 \
     python-dotenv \
     pika==1.3.1 \
     python-json-logger

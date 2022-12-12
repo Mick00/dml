@@ -68,8 +68,12 @@ class StartClusterSelectionTests(EventHandler):
         ]
 
 
-def compute_score_quadratic_loss_popularity(test_metric: float, popularity: int):
-    return (1 / test_metric) * math.sqrt(popularity)
+def compute_score_quadratic_loss_popularity(loss: float, popularity: int):
+    return (1 / loss) * math.sqrt(popularity)
+
+
+def compute_score_quadratic_acc_popularity(acc: float, popularity: int):
+    return acc * 100 * math.sqrt(popularity)
 
 
 def compute_scores(round_id, state: State, runs):
@@ -80,6 +84,13 @@ def compute_scores(round_id, state: State, runs):
         strategy = get_strategy(state)
         cluster_popularity = strategy.for_round(round_id - 1).clusters.get_clusters_popularity()
         run_scores = list(map(lambda run: compute_score_quadratic_loss_popularity(
+            run.data.metrics.get(metric_field),
+            cluster_popularity.get(run.data.tags.get("cluster_id"))
+        ), runs))
+    if scoring_method == "accqpop":
+        strategy = get_strategy(state)
+        cluster_popularity = strategy.for_round(round_id - 1).clusters.get_clusters_popularity()
+        run_scores = list(map(lambda run: compute_score_quadratic_acc_popularity(
             run.data.metrics.get(metric_field),
             cluster_popularity.get(run.data.tags.get("cluster_id"))
         ), runs))
