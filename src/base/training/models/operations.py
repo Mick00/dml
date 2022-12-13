@@ -1,6 +1,8 @@
+import math
 from collections import OrderedDict
 from typing import Any
 
+import scipy.spatial.distance
 import torch
 from torch import nn
 
@@ -50,15 +52,33 @@ def clone_into(model, to_clone):
     return model
 
 
-def weight_divergence(model_0, model_1):
-    diff = calc_diff(model_0, model_1)
+def relative_divergence(state_0, state_1):
+    diff = OrderedDict()
+    for layer in state_0:
+        div = torch.abs(state_0[layer] - state_1[layer]) / state_0[layer]
+        diff[layer] = div.sum()
+    return diff
+
+
+def weight_divergence(model_0, model_1, method=None):
+    state_0 = model_0.state_dict()
+    state_1 = model_1.state_dict()
+    if method == "cosine":
+        div = cosine_divergence(state_0, state_1)
+    else:
+        div = relative_divergence(state_0, state_1)
     total_divergence = 0
-    for layer in diff:
-        div = torch.cumsum(torch.abs(diff[layer]), dim=0)
-        total_divergence += div.sum()
+    for layer in div:
+        total_divergence += div[layer]
     return total_divergence
 
-#def EMD(p, q):
-#    x = p - q
-#    y = torch.cumsum(x, dim=0)
-#    return torch.abs(y).sum()
+
+def cosine_divergence(state_0, state_1):
+    diff = OrderedDict()
+    for layer in state_0:
+        div = scipy.spatial.distance.cosine(
+            torch.flatten(state_0[layer]),
+            torch.flatten(state_1[layer])
+        )
+        diff[layer] = div
+    return diff

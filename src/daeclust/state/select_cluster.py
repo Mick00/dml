@@ -124,7 +124,7 @@ class SelectHighestScoreCluster(EventHandler):
         run_scores = compute_scores(round_id, state, runs)
         run_scores = np.array(run_scores)
         n_clusters = len(set(map(lambda run: run.data.tags.get('cluster_id'), runs)))
-        selection_threshold = np.percentile(run_scores, 100 * math.sqrt(n_clusters)/n_clusters, method='closest_observation')
+        selection_threshold = np.percentile(run_scores, 100 * math.sqrt(n_clusters)/n_clusters)
         selected = []
         best_score = 0
         best_run = None

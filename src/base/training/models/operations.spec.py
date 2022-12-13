@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import Mock
 
+import scipy
 import torch
 from torch import nn
 
@@ -58,7 +59,14 @@ class OperationsTest(unittest.TestCase):
             "bias": torch.Tensor([2]),
         })
         divergence = weight_divergence(model_0, model_1)
-        self.assertEqual(divergence, 7)
+
+        self.assertEqual(divergence, (3 / 2) * 2 + 1 / 3)
+
+    def test_cosine_distance(self):
+        w_0 = [0, 1]
+        w_1 = [0, -1]
+        distance = scipy.spatial.distance.cosine(w_0, w_1)
+        print(distance)
 
 if __name__ == '__main__':
     unittest.main()

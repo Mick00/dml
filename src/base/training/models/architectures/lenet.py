@@ -42,7 +42,9 @@ class LeNet(pl.LightningModule):
     def training_step(self, train_batch, batch_idx):
         x, y = train_batch
         logits = self(x)
-        return nll_loss(logits, y)
+        loss = nll_loss(logits, y)
+        self.log("training_loss", loss, prog_bar=True)
+        return loss
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
@@ -52,8 +54,8 @@ class LeNet(pl.LightningModule):
         self.val_accuracy.update(preds, y)
 
         # Calling self.log will surface up scalars for you in TensorBoard
-        self.log("val_loss", loss, prog_bar=True)
-        self.log("val_acc", self.val_accuracy, prog_bar=True)
+        self.log("validation_loss", loss, prog_bar=True)
+        self.log("validation_acc", self.val_accuracy, prog_bar=True)
 
     def test_step(self, batch, batch_idx):
         x, y = batch

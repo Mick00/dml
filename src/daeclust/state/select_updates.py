@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.daeclust.daecluste_helper import get_strategy, get_div_tolerance
+from src.daeclust.daecluste_helper import get_strategy, get_div_tolerance, get_divergence_method
 from src.daeclust.state.events import TrainerSelectedUpdates
 from src.nsclust.nsclust_helpers import get_current_cluster
 from src.daeclust.state.events import StartUpdateSelection
@@ -25,10 +25,11 @@ class WDUpdateSelector(EventHandler):
         my_update.divergence = 0
         my_update_model = load_model(my_update)
         selected = [my_update]
+        wd_method = get_divergence_method(state)
         for update in update_pool:
             if update.from_id != my_id:
                 loaded_update = load_model(update)
-                update.divergence = weight_divergence(my_update_model, loaded_update).item()
+                update.divergence = weight_divergence(my_update_model, loaded_update, method=wd_method).item()
                 selected.append(update)
         selected.sort(key=lambda update: update.divergence)
         all_divergences = list(map(lambda exp: exp.divergence, selected))

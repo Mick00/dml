@@ -25,6 +25,7 @@ argparse = get_arg_parse()
 argparse.add_argument('--divergence_tolerance', type=float, default=3)
 argparse.add_argument('--cluster_metric')
 argparse.add_argument('--cluster_scoring')
+argparse.add_argument('--divergence_method', default=None)
 
 def register_daeclust_module(handler: EventListener):
     handler.register_handler(CLIENT_STARTED, InitModelLoader(30))

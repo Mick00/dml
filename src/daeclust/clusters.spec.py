@@ -21,6 +21,5 @@ class ClustersTest(unittest.TestCase):
             "cluster_2": 2,
         })
 
-
 if __name__ == '__main__':
     unittest.main()

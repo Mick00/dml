@@ -36,6 +36,8 @@ class ConfigureSampler(EventHandler):
             rules.append(normal_probability_weights(mean, std))
             log_dict = log_dict | {"mean": mean, "std": std}
         data_loader.set_sampling_rules(rules)
+        n_samples = get_n_samples(state)
+        log_dict["n_samples"] = n_samples
+        data_loader.set_n_samples(n_samples)
         data_loader.set_sampler_tags(log_dict)
-        data_loader.set_n_samples(get_n_samples(state))
         return [self.log_info("sampler.config", log_dict)]

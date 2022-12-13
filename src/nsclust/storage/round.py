@@ -59,8 +59,7 @@ class Round:
     def compute_final_model(self) -> nn.Module:
         model = self.create_model()
         for i, update_path in enumerate(self.update_paths):
-            update = self.create_model()
-            update.load_from_checkpoint(update_path)
+            update = self.create_model().load_from_checkpoint(update_path)
             merge_models(model, update, n=i)
         return model
 

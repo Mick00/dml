@@ -15,7 +15,6 @@ class DeconvLayer(nn.Module):
                 stride=stride,
                 padding=padding,
             ),
-            nn.BatchNorm2d(out_channels),
             nn.ReLU(),
         )
 

@@ -25,3 +25,7 @@ def get_cluster_metric(state: State) -> str:
 
 def get_cluster_scoring(state: State) -> str:
     return get_config(state).get('cluster_scoring')
+
+
+def get_divergence_method(state: State) -> str:
+    return get_config(state).get("divergence_method")

@@ -19,7 +19,7 @@ parser.add_argument('--data_lower_bound', default="-1")
 parser.add_argument('--data_higher_bound', default="-1")
 parser.add_argument('--data_mean', default="-1")
 parser.add_argument('--data_std', default="-1")
-parser.add_argument('--n_samples', default=0)
+parser.add_argument('--n_samples', type=int, default=0)
 
 
 def register_data_module(handler: EventListener):
