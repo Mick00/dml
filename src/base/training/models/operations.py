@@ -79,6 +79,6 @@ def cosine_divergence(state_0, state_1):
         div = scipy.spatial.distance.cosine(
             torch.flatten(state_0[layer]),
             torch.flatten(state_1[layer])
-        )
+        ) / torch.flatten(state_0[layer]).sum()
         diff[layer] = div
     return diff

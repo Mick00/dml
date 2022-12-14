@@ -2,6 +2,7 @@ import pytorch_lightning as pl
 from src.base.training.models.architectures.cae_lenet import CaeLeNet
 from src.base.training.models.architectures.cae_lenet_light import CaeLeNetLight
 from src.base.training.models.architectures.lenet import LeNet
+from src.base.training.models.architectures.lenet_light import LeNetLight
 
 
 def create_model(model_name: str) -> pl.LightningModule:
@@ -11,3 +12,5 @@ def create_model(model_name: str) -> pl.LightningModule:
         return CaeLeNetLight()
     if model_name == "lenet":
         return LeNet()
+    if model_name == "lenet_light":
+        return LeNetLight()

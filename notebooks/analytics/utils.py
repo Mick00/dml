@@ -52,8 +52,38 @@ def load_runs(client, exp_name, n_rounds):
         return pd.read_csv(file_path)
     exp = client.get_experiment_by_name(exp_name)
     runs = get_runs(client, exp, n_rounds)
-    data = list(map(lambda run: run.data.metrics | run.data.tags, runs))
+    data = list(map(lambda run: run.data.metrics | run.data.tags | {
+        "start_time": run.info.start_time,
+        "end_time": run.info.end_time,
+        "artifact_uri": run.info.artifact_uri,
+        "run_id": run.info.run_id,
+        "run_name": run.info.run_name,
+        "run_uuid": run.info.run_uuid
+    }, runs))
     df = pd.DataFrame(data=data)
     df["round_id"] = df["round_id"].astype(float)
     df.to_csv(file_path)
     return df
+
+
+def boxplot_metric(df, metric):
+    if metric in df.columns:
+        plot_ax = df.groupby(["round_id", "trainer_id"]).max().boxplot(metric, by="round_id")
+        plot_fig = plot_ax.get_figure()
+        savefig(plot_fig, metric)
+        plot_fig.show()
+        datasets = df.dataset.unique()
+        if len(datasets) > 1:
+            for dataset in datasets:
+                    plot_ax = df.loc[df.dataset == dataset].groupby(["round_id", "trainer_id"]).max().boxplot(
+                        metric, by="round_id")
+                    plot_fig = plot_ax.get_figure()
+                    savefig(plot_fig, f"{metric}_{dataset}")
+                    plot_fig.show()
+
+
+def plot_cluster_count(df):
+    cluster_count_ax = df.groupby("round_id")["cluster_id"].nunique().plot()
+    cluster_count_fig = cluster_count_ax.get_figure()
+    savefig(cluster_count_fig, "cluster_count")
+    cluster_count_fig.show()
