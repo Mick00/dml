@@ -23,8 +23,8 @@ from src.nsclust.storage.init_model_storage import InitModelLoader
 
 argparse = get_arg_parse()
 argparse.add_argument('--divergence_tolerance', type=float, default=3)
-argparse.add_argument('--cluster_metric')
-argparse.add_argument('--cluster_scoring')
+argparse.add_argument('--cluster_metric', required=True)
+argparse.add_argument('--cluster_scoring', required=True)
 argparse.add_argument('--divergence_method', default=None)
 
 def register_daeclust_module(handler: EventListener):

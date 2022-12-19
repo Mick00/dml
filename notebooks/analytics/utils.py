@@ -14,9 +14,9 @@ data = {
 }
 
 
-def init_analysis(exp_name):
+def init_analysis(exp_name, save_folder=None):
     data["exp_name"] = exp_name
-    data["save_folder"] = os.path.join(SAVE_FOLDER, exp_name)
+    data["save_folder"] = os.path.join(SAVE_FOLDER, exp_name if save_folder is None else save_folder)
     if not os.path.exists(data.get("save_folder")):
         os.makedirs(data.get("save_folder"))
     data["client"] = MlflowClient(tracking_uri="http://antares.logti.etsmtl.ca:5000")
@@ -25,6 +25,12 @@ def init_analysis(exp_name):
 
 def get_exp_name():
     return data["exp_name"]
+
+
+def set_save_folder(save_folder):
+    data["save_folder"] = save_folder
+    if not os.path.exists(data.get("save_folder")):
+        os.makedirs(data.get("save_folder"))
 
 
 def savefig(fig, name):

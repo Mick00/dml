@@ -16,19 +16,12 @@ services:
       - "./lightning_data:/mlflow/artifacts"
   tracking_db:
     image: 'postgres:latest'
-
-    # By default, a Postgres database is running on the 5432 port.
-    # If we want to access the database from our computer (outside the container),
-    # we must share the port with our computer's port.
-    # The syntax is [port we want on our machine]:[port we want to retrieve in the container]
-    # Note: You are free to change your computer's port,
-    # but take into consideration that it will change the way
-    # you are connecting to your database.
     ports:
       - 5432:5432
-
     environment:
-      POSTGRES_USER: mlflow # The PostgreSQL user (useful to connect to the database)
-      POSTGRES_PASSWORD: mlflow # The PostgreSQL password (useful to connect to the database)
+      POSTGRES_USER: mlflow
+      POSTGRES_PASSWORD: mlflow
       POSTGRES_DB: mlflow
+    volumes:
+      - ./mlflow_data:/var/lib/postgresql/data
 
