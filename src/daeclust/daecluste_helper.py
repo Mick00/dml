@@ -1,3 +1,6 @@
+import json
+
+from src.base.client.client_state_helpers import get_node_rank
 from src.base.config.config_state_helper import get_config
 from src.daeclust.constants import DAECLUST_MODULE
 from src.daeclust.strategy import AggregationStrategy
@@ -16,7 +19,14 @@ def get_strategy(state: State) -> AggregationStrategy:
 
 
 def get_div_tolerance(state: State) -> float:
-    return get_config(state).get("divergence_tolerance", 3.0)
+    value = get_config(state).get("divergence_tolerance", "3.0")
+    if value.isnumeric() or value[1:].isnumeric():
+        return int(value)
+    values = json.loads(value)
+    value = values[get_node_rank(state) % len(values)]
+    if not isinstance(value, int):
+        value = int(value)
+    return value
 
 
 def get_cluster_metric(state: State) -> str:

@@ -5,7 +5,6 @@ import pytorch_lightning as pl
 from torch.nn.functional import nll_loss, log_softmax
 from torchmetrics import Accuracy
 
-from src.base.training.models.aes_utils import get_enc_dec
 from src.base.training.models.layers.conv import ConvLayer
 
 

@@ -22,7 +22,7 @@ from src.base.training.constants import ROUND_START, MODEL_TRAINED, NEXT_ROUND
 from src.nsclust.storage.init_model_storage import InitModelLoader
 
 argparse = get_arg_parse()
-argparse.add_argument('--divergence_tolerance', type=float, default=3)
+argparse.add_argument('--divergence_tolerance', default="3")
 argparse.add_argument('--cluster_metric', required=True)
 argparse.add_argument('--cluster_scoring', required=True)
 argparse.add_argument('--divergence_method', default=None)
