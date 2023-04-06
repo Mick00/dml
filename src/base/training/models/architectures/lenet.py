@@ -51,8 +51,6 @@ class LeNet(pl.LightningModule):
         loss = nll_loss(logits, y)
         preds = torch.argmax(logits, dim=1)
         self.val_accuracy.update(preds, y)
-
-        # Calling self.log will surface up scalars for you in TensorBoard
         self.log("validation_loss", loss, prog_bar=True)
         self.log("validation_acc", self.val_accuracy, prog_bar=True)
 
@@ -62,7 +60,5 @@ class LeNet(pl.LightningModule):
         loss = nll_loss(logits, y)
         preds = torch.argmax(logits, dim=1)
         self.test_accuracy.update(preds, y)
-
-        # Calling self.log will surface up scalars for you in TensorBoard
         self.log("test_loss", loss, prog_bar=True)
         self.log("test_acc", self.test_accuracy, prog_bar=True)

@@ -25,7 +25,7 @@ def register_training_module(handler: EventListener):
     handler.register_handler(HANDLER_STARTED, InitExperimentTracking(42))
     handler.register_handler(HANDLER_STARTED, StartTrainingClient(120))
     handler.register_handler(INIT_EXPERIMENT, InitExperimentHandler(100))
-    handler.register_handler(NEW_PEER, TriggerGenesis(100))
+    handler.register_handler(NEW_PEER, TriggerGenesis(200))
     handler.register_handler(NEXT_ROUND, NextRoundTransition(100))
     handler.register_handler(TRAIN_MODEL, Train(100))
     handler.register_handler(MODEL_TRAINED, TrainingCleanUp(100))

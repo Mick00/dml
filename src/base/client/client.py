@@ -1,4 +1,3 @@
-import secrets
 import time
 
 import pika
@@ -68,7 +67,7 @@ class Client:
                 serialized_message = self.serializer.serialize(message)
                 channel = self.get_channel()
                 channel.basic_publish(exchange=self.exchange_name, routing_key='', body=serialized_message)
-                tries = 0
+                break
             except AMQPConnectionError:
                 self.handler.queue_event(LogWarning("client.send", extra={
                     "hostname": self.hostname,

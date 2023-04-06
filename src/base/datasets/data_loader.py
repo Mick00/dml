@@ -27,6 +27,9 @@ class DataLoader:
     def set_sampler_tags(self, tags: dict):
         self.sampler_tags = tags
 
+    def add_sampler_tags(self, tags: dict):
+        self.sampler_tags = self.sampler_tags | tags
+
     def set_n_samples(self, n_samples):
         self.n_samples = n_samples
 

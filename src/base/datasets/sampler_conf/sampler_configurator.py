@@ -21,7 +21,7 @@ class ConfigureSampler(EventHandler):
             log_dict["balanced"] = True
         if apply_partitions_rule(state):
             index = data_partition_index(state)
-            n_partitions =data_n_partitions(state)
+            n_partitions = data_n_partitions(state)
             rules.append(partition_subset(index, n_partitions))
             log_dict = log_dict | {"partition_index": index, "n_partitions": n_partitions}
 

@@ -6,6 +6,8 @@ from src.base.client.constants import CLIENT_MODULE
 from src.base.config.constants import CONFIG_MODULE
 from src.base.datasets.data_loader import get_data_loader
 from src.base.datasets.init_data_loader import InitDataLoader
+from src.base.datasets.loaders.cifar10_loader import CIFAR10Register
+from src.base.datasets.loaders.creditcard_loader import CreditCardFraudRegister
 from src.base.datasets.loaders.emnist_loader import EmnistRegister
 from src.base.datasets.loaders.fmnist_loader import FmnistRegister
 from src.base.datasets.loaders.mnist_loader import MnistRegister
@@ -22,13 +24,15 @@ state = State()
 def bootstrap_notebook(config: dict):
     state.update_module(CONFIG_MODULE, config)
     state.update_module(CLIENT_MODULE, {ID_KEY: "notebook"})
+    state.update_module(CONFIG_MODULE, {"enable_gpu": True})
     run(InitDataLoader, None, state)
     run(FmnistRegister, None, state)
     run(MnistRegister, None, state)
     run(EmnistRegister, None, state)
+    run(CIFAR10Register, None, state)
+    run(CreditCardFraudRegister, None, state)
     run(InitExperimentTracking, None, state)
     run(InitExperimentHandler, InitExperiment(config.get("exp_name")), state)
-    run(StartTrainingClient, None, state)
 
 
 def run(constructor, event, state):
@@ -38,6 +42,7 @@ def run(constructor, event, state):
 
 def load_dataset(config, sampler_conf_cb=None):
     state.update_module(CONFIG_MODULE, config)
+    run(StartTrainingClient, None, state)
     dl = get_data_loader(state)
     dl.set_sampler_tags({"dataset": config.get("dataset")})
     if callable(sampler_conf_cb):
@@ -65,3 +70,13 @@ def test(model: pl.LightningModule):
         model)
     tc = get_training_client(state)
     return tc.test_model(exp)
+
+
+def get_train_dataloader():
+    tc = get_training_client(state)
+    return tc.get_train_dataloader()[0]
+
+
+def get_test_dataloader():
+    tc = get_training_client(state)
+    return tc.get_test_dataloader()[0]

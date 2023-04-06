@@ -1,3 +1,4 @@
+import time
 from queue import Queue
 import signal
 
@@ -40,7 +41,10 @@ class EventListener:
     def handle_events(self):
         while self.state.get_module_state(HANDLER_MODULE)["started"]:
             event = self.event_queue.get()
-            self.handle_event(event)
+            if event:
+                self.handle_event(event)
+            else:
+                time.sleep(0.25)
         self.handle_event(Event(HANDLER_STOPPED))
 
     def exit_graceful(self, signum, frame):

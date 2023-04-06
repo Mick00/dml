@@ -8,7 +8,7 @@ from src.base.states.state import State
 from src.base.states.event_handler import EventHandlerSimple
 from src.base.training.constants import TRAINING_MODULE
 from src.base.training.training_state_helper import is_training_client_started, TrainingClient, TRAINING_CLIENT_KEY, \
-    get_training_profiler, get_n_epochs, get_training_n_devices
+    get_training_profiler, get_n_epochs, get_training_n_devices, get_batch_size
 
 
 class StartTrainingClient(EventHandlerSimple):
@@ -23,7 +23,8 @@ class StartTrainingClient(EventHandlerSimple):
                 exp_name=get_experience_name(state),
                 profiler=get_training_profiler(state),
                 epochs=get_n_epochs(state),
-                devices=get_training_n_devices(state)
+                devices=get_training_n_devices(state),
+                batch_size=get_batch_size(state)
             )
             state.update_module(TRAINING_MODULE, {
                 STARTED_KEY: True,

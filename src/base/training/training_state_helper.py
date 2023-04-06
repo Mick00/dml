@@ -40,3 +40,7 @@ def get_training_n_devices(state: State) -> int:
 
 def get_n_epochs(state: State) -> int:
     return get_config(state).get('n_epochs')
+
+
+def get_batch_size(state: State) -> int:
+    return get_config(state).get('batch_size', 32)

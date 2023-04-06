@@ -1,0 +1,5 @@
+name: contracts
+plugins:
+  - name: vyper
+  - name: hardhat
+  

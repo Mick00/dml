@@ -19,7 +19,8 @@ class TrainingClient:
                  exp_name="default",
                  profiler=None,
                  devices=None,
-                 epochs=1
+                 epochs=1,
+                 batch_size=32
                  ):
         if devices > 0:
             torch.set_num_threads(devices)
@@ -32,6 +33,7 @@ class TrainingClient:
         self.profiler = profiler
         self.devices = devices
         self.epochs = epochs
+        self.batch_size = batch_size
         self.fast_dev_run = False
         self.trainer_tags = {}
 
@@ -96,8 +98,8 @@ class TrainingClient:
     def get_train_dataloader(self):
         train_dataset, train_sampler = self.data_loader.get_train_data()
         val_dataset, val_sampler = self.data_loader.get_val_data()
-        return DataLoader(train_dataset, batch_size=32, sampler=train_sampler, num_workers=self.devices), \
-               DataLoader(val_dataset, batch_size=32, sampler=val_sampler, num_workers=self.devices), \
+        return DataLoader(train_dataset, batch_size=self.batch_size, sampler=train_sampler, num_workers=self.devices), \
+               DataLoader(val_dataset, batch_size=self.batch_size, sampler=val_sampler, num_workers=self.devices), \
                self.data_loader.sampler_tags
 
     def get_checkpoint_path(self, exp: Experiment):
