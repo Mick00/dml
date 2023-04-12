@@ -156,8 +156,7 @@ def aggregate(updates: uint256[50], URI: String[128]):
             break
         assert updates[i-1] < updates[i], "Update list is not ordered"
         assert parentHash == self.parentModel[updates[i]], "Updates do not have the same parent"
-    childHash: bytes32 = keccak256(_abi_encode(updates))
-    self.models.appendGeneration(parentHash, childHash, URI)
+    self.models.appendGeneration(parentHash, updates, URI)
 
 @external
 def propose(parentModel: bytes32, URI: String[128]) -> uint256:

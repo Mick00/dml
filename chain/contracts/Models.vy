@@ -2,6 +2,7 @@
 
 from vyper.interfaces import ERC165
 from vyper.interfaces import ERC721
+from .Trainers import Trainers
 
 implements: ERC165
 implements: ERC721
@@ -89,16 +90,28 @@ event ApprovalForAll:
 event ModelAppended:
     hash: indexed(bytes32)
     parent: indexed(bytes32)
-    child: indexed(bytes32)
-    id: uint256
+    updates: uint256[50]
     weight: uint256
 
+event TrainerVoted:
+    trainerId: indexed(uint256)
+    trainer: indexed(address)
+    round: indexed(uint256)
+
+event NewRound:
+    prevRound: indexed(uint256)
+    nextRound: indexed(uint256)
+
 totalSupply: public(uint256)
+round: public(uint256)
+nextRoundVotes: public(uint256)
+roundVoted: public(HashMap[uint256, bool])
 
 # @dev TokenID => owner
 idToOwner: public(HashMap[uint256, address])
 hashToId: public(HashMap[bytes32, uint256])
 idWeight: public(HashMap[uint256, uint256])
+idToRound: public(HashMap[uint256, uint256])
 
 # @dev Mapping from owner address to count of their tokens.
 balanceOf: public(HashMap[address, uint256])
@@ -128,13 +141,14 @@ NAME: constant(String[15]) = "Global Models"
 SYMBOL: constant(String[3]) = "GLO"
 
 tokenURI: public(HashMap[uint256, String[128]])
+trainers: Trainers
 
 @external
-def __init__():
+def __init__(trainers: address):
     """
     @dev Contract constructor.
     """
-
+    self.trainers = Trainers(trainers)
     # ERC712 domain separator for ERC4494
     self.DOMAIN_SEPARATOR = keccak256(
         _abi_encode(
@@ -154,11 +168,27 @@ def __init__():
 def root() -> bytes32:
     return empty(bytes32)
 
+@external
+def nextRound():
+    trainerId: uint256 = self.trainers.getTrainerId(msg.sender)
+    assert trainerId > 0, "trainer not registered"
+    ifVoted: bool = self.round % 2 == 0 
+    assert self.roundVoted[trainerId] != ifVoted, "Address has already voted"
+    self.roundVoted[trainerId] = not self.roundVoted[trainerId]
+    self.nextRoundVotes += 1
+    log TrainerVoted(trainerId, msg.sender, self.round)
+    if self.nextRoundVotes >= self.trainers.totalSupply():
+        self.round += 1
+        self.nextRoundVotes = 0
+        log NewRound(self.round - 1, self.round)
 
 @external
-def appendGeneration(parent: bytes32, child: bytes32, URI: String[128]) -> bytes32:
-    return self._append(parent, child, URI)
+def appendGeneration(parent: bytes32, updates: uint256[50], URI: String[128]) -> bytes32:
+    childHash: bytes32 = keccak256(_abi_encode(updates))
+    modelHash: bytes32 = self._append(parent, childHash, URI)
 
+    log ModelAppended(modelHash, parent, updates, self.idWeight[self.hashToId[modelHash]])
+    return modelHash
 
 @internal
 def _append(parent: bytes32, child: bytes32, URI: String[128]) -> bytes32:
@@ -177,7 +207,6 @@ def _append(parent: bytes32, child: bytes32, URI: String[128]) -> bytes32:
     self.hashToId[hash] = id
     self.tokenURI[id] = URI
     self.idWeight[id] += 1
-    log ModelAppended(hash, parent, child, id, self.idWeight[id])
     log Transfer(empty(address), empty(address), self.totalSupply)
 
     return hash

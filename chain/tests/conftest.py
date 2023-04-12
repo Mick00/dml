@@ -24,11 +24,11 @@ def receiver(accounts):
 ### Contracts ###
 @pytest.fixture(scope="function")
 def trainers(owner, project):
-    return owner.deploy(project.Trainer)
+    return owner.deploy(project.Trainers)
 
 @pytest.fixture(scope="function")
-def models(deployer, project):
-    return deployer.deploy(project.Models)
+def models(deployer, project, trainers):
+    return deployer.deploy(project.Models, trainers)
 
 @pytest.fixture(scope="function")
 def updates(deployer, project, models):

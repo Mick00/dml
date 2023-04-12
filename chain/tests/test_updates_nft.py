@@ -15,7 +15,7 @@ def test_aggregate(deployer, trainer1, updates, models):
     prop_trainer = updates.propose(parent, "ex uri", sender=trainer1)
     ids = [prop_deployer.events[0].updateId, prop_trainer.events[0].updateId]
     agg = updates.aggregate(pad_ids(ids), "aggregate", sender=deployer)
-    assert agg.events[0].hash == get_aggregate_hash(parent, ids)
+    assert agg.events[1].hash == get_aggregate_hash(parent, ids)
     assert models.modelExists(get_aggregate_hash(parent, ids))
 
 def test_aggregate_unordered(deployer, trainer1, updates, models):

@@ -168,6 +168,11 @@ def _isRegistered(trainer: address) -> bool:
 def isRegistered(trainer: address) -> bool:
     return self._isRegistered(trainer)
 
+@view
+@external
+def getTrainerId(trainer: address) -> uint256:
+    return self.ownerToId[trainer] 
+
 # ERC721 Metadata Extension
 @pure
 @external
