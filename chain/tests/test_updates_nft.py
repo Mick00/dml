@@ -9,6 +9,17 @@ def test_propose(deployer, trainer1, updates, models):
     assert updates.ownerOf(tx_deployer.events[0].updateId) == deployer
     assert updates.ownerOf(tx_trainer.events[0].updateId) == trainer1
 
+def test_propose_init(updates, deployer, trainer1):
+    parent = '0000000000000000000000000000000000000000000000000000000000000000'
+    uri = 'C:\\\\Users\\\\micdu\\\\Code\\\\pythonProject\\\\dmtl\\\\lightning_data\\checkpoints\\1\\28757799ca1846a08f0e01eeb225519c\\checkpoints\\epoch=0-step=797.ckpt'
+    tx_deployer = updates.propose(bytes.fromhex(parent), uri, sender=trainer1)
+
+def test_propose_not_exists(updates, trainer1):
+    parent = '0000000000000000000000000000000000000000000000000000000000000001'
+    uri = 'C:\\\\Users\\\\micdu\\\\Code\\\\pythonProject\\\\dmtl\\\\lightning_data\\checkpoints\\1\\28757799ca1846a08f0e01eeb225519c\\checkpoints\\epoch=0-step=797.ckpt'
+    with ape.reverts(expected_message="parent model does not exist"):
+        tx_deployer = updates.propose(bytes.fromhex(parent), uri, sender=trainer1)
+
 def test_aggregate(deployer, trainer1, updates, models):
     parent = models.root()
     prop_deployer = updates.propose(parent, "ex uri", sender=deployer)

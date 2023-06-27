@@ -37,7 +37,7 @@ interface ERC721Metadata:
 
 	def tokenURI(
 		_tokenId: uint256
-	) -> String[128]: view
+	) -> String[256]: view
 
 interface ERC721Enumerable:
 
@@ -91,7 +91,7 @@ event UpdateProposed:
     proposer: indexed(address)
     parent: indexed(bytes32)
     updateId: uint256
-    URI: String[128]
+    URI: String[256]
 
 models: Models
 
@@ -129,7 +129,7 @@ EIP712_DOMAIN_VERSIONHASH: constant(bytes32) = keccak256("1")
 NAME: constant(String[6]) = "Models"
 SYMBOL: constant(String[3]) = "MOD"
 
-tokenURI: public(HashMap[uint256, String[128]])
+tokenURI: public(HashMap[uint256, String[256]])
 
 @external
 def __init__(models: address):
@@ -150,6 +150,13 @@ def __init__(models: address):
 
 @external
 def aggregate(updates: uint256[50], URI: String[128]):
+    """
+    @notice Lorsque les entraîneurs ont décidé de leur combinaison, ils
+        appellent cette fonction pour signaler leur choix
+        La fonction s'assure que les MAJ sont triés en ordre croissant
+        et ont le même parent pour que la génération du prochain ID 
+        soit correct
+    """
     parentHash: bytes32 = self.parentModel[updates[0]]
     for i in range(1, 50):
         if updates[i] == empty(uint256):
@@ -158,9 +165,13 @@ def aggregate(updates: uint256[50], URI: String[128]):
         assert parentHash == self.parentModel[updates[i]], "Updates do not have the same parent"
     self.models.appendGeneration(parentHash, updates, URI)
 
+
 @external
-def propose(parentModel: bytes32, URI: String[128]) -> uint256:
-    assert self.models.modelExists(parentModel), "parent model does not exist"
+def propose(parentModel: bytes32, URI: String[256]) -> uint256:
+    """
+    @notice Les entraîneurs appellent cette méthode pour enregistrer leur MAJ.
+    @param URI pointe vers l'espace de stockage du modèle
+    """
     id: uint256 = self._mint(msg.sender, URI)
     self.parentModel[id] = parentModel
     log UpdateProposed(msg.sender, parentModel, id, URI)
@@ -168,7 +179,7 @@ def propose(parentModel: bytes32, URI: String[128]) -> uint256:
 
 
 @internal
-def _mint(receiver: address, URI: String[128]) -> uint256:
+def _mint(receiver: address, URI: String[256]) -> uint256:
     """
     @dev Create a new Owner NFT
     @return bool confirming that the minting occurred 

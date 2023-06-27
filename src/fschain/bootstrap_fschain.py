@@ -12,6 +12,7 @@ from src.base.states.event import Event
 from src.base.states.event_listener import EventListener
 from src.base.states.handlers import HANDLER_START, register_handler_module
 from src.base.training.register import register_training_module
+from src.fschain.register import register_fschain
 
 parser = get_arg_parse()
 
@@ -27,7 +28,7 @@ def bootstrap_fschain():
     register_data_module(handler)
     register_cryptoclient_module(handler)
     register_training_module(handler)
-    register_daeclust_module(handler)
+    register_fschain(handler)
     handler.handle_event(UpdateConfig(args.__dict__))
     handler.handle_event(Event(HANDLER_START))
     if args.interactive:

@@ -144,6 +144,7 @@ def __init__():
 @external
 def register() -> bool:
     """
+    @notice Les entraîneurs doivent s'enregistrer pour pouvoir participer et passer à la prochaine ronde
     @dev Create a new Owner NFT
     @return bool confirming that the minting occurred 
     """ 

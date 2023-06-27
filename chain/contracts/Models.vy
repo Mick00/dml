@@ -88,6 +88,7 @@ event ApprovalForAll:
     approved: bool
 
 event ModelAppended:
+    roundId: indexed(uint256)
     hash: indexed(bytes32)
     parent: indexed(bytes32)
     updates: uint256[50]
@@ -166,10 +167,18 @@ def __init__(trainers: address):
 @view
 @external
 def root() -> bytes32:
+    """
+    @dev Le premier noeud du graphe
+    """
     return empty(bytes32)
+
 
 @external
 def nextRound():
+    """
+    @notice Indique que l'entraineur est pret à passer à une nouvelle ronde
+    @dev stock si l'entraîneur a voté, la valeur bool flip à chaque ronde
+    """
     trainerId: uint256 = self.trainers.getTrainerId(msg.sender)
     assert trainerId > 0, "trainer not registered"
     ifVoted: bool = self.round % 2 == 0 
@@ -184,16 +193,21 @@ def nextRound():
 
 @external
 def appendGeneration(parent: bytes32, updates: uint256[50], URI: String[128]) -> bytes32:
+    """
+    @notice Soumet une nouvelle combinaison de mise à jour
+    @returns l'ID du nouveau modèle
+    """
     childHash: bytes32 = keccak256(_abi_encode(updates))
     modelHash: bytes32 = self._append(parent, childHash, URI)
 
-    log ModelAppended(modelHash, parent, updates, self.idWeight[self.hashToId[modelHash]])
+    log ModelAppended(self.round, modelHash, parent, updates, self.idWeight[self.hashToId[modelHash]])
     return modelHash
 
 @internal
 def _append(parent: bytes32, child: bytes32, URI: String[128]) -> bytes32:
     """
-    @dev Create a new Owner NFT
+    @dev Ajoute le nouveau modèle au graph.
+    @dev Incremente le poid si la combinaison a déjà été soumise
     @return bytes32 the hash for the new NFT 
     """
     assert self._hashExists(parent), "parent hash doesn't exists"

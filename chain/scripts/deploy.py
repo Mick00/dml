@@ -46,7 +46,7 @@ def cli(cli_ctx, network):
 
     registry = account.deploy(project.Registry)
     trainers = account.deploy(project.Trainers)
-    models = account.deploy(project.Models)
+    models = account.deploy(project.Models, trainers.address)
     updates = account.deploy(project.Updates, models.address)
 
     addresses = get_address_book_entry(project.Registry) | \

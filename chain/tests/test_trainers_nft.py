@@ -114,3 +114,4 @@ def test_uri(trainers, owner):
     trainers.setBaseURI("new base uri", sender=owner)
     assert trainers.baseURI() == "new base uri"
     assert trainers.tokenURI(1) == "new base uri/1"
+

@@ -1,3 +1,4 @@
+
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const { subtask } = require("hardhat/config");
@@ -21,6 +22,8 @@ subtask(TASK_NODE_SERVER_READY)
       return runSuper(args)
     }
   );
+
+require("@nomiclabs/hardhat-ethers");  
 // See https://hardhat.org/config/ for config options.
 module.exports = {
   networks: {

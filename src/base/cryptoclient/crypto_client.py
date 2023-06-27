@@ -60,12 +60,18 @@ class CryptoClient():
 
     def send(self, message: Message):
         if message.type in self.senders:
-            tx = self.senders[message.type](message, self.contracts)\
-                .buildTransaction({"nonce": self.get_account_nonce()})
+            tx = self.senders[message.type](message, self.contracts)
+            nonce = self.get_account_nonce()
+            tx = tx.build_transaction({
+                "nonce": nonce,
+                #'maxFeePerGas': self.provider.toWei(2, "gwei"),
+                #'maxPriorityFeePerGas': self.provider.toWei(1, "gwei"),
+                #'gas': self.provider.toWei(0.003, "gwei")
+            })
             signed_tx = self.account.sign_transaction(tx)
             self.provider.eth.send_raw_transaction(signed_tx.rawTransaction)
         else:
-            print(message.type, "not found in senders")
+            print("No sender found for", message.type)
 
     def request_funds(self):
         self.provider.provider.make_request('hardhat_setBalance', [self.account.address, self.provider.toHex(self.provider.toWei(10, "ether"))])
